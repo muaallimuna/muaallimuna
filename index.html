@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0D0B1E">
+<meta name="description" content="Muallimuna — Apprendre l'arabe en s'amusant">
+<link rel="manifest" href="manifest.json">
+<title>مُعَلِّمُنَا · Muallimuna</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&family=Fredoka+One&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0D0B1E;--card:#16142B;--gold:#E8C56D;--teal:#4ECDC4;
+  --rose:#FF6B9D;--purple:#9B72CF;--amber:#FFB347;--green:#6BCB77;
+  --blue:#4D96FF;--white:#F0ECFF;--muted:rgba(240,236,255,0.45);
+  --border:rgba(255,255,255,0.07);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.12;}
+.blob1{width:500px;height:500px;background:#7C5CBF;top:-100px;left:-150px;animation:b1 12s ease-in-out infinite;}
+.blob2{width:400px;height:400px;background:#FF6B9D;bottom:-80px;right:-100px;animation:b2 10s ease-in-out infinite;}
+.blob3{width:300px;height:300px;background:#4ECDC4;top:40%;left:50%;animation:b3 14s ease-in-out infinite;}
+@keyframes b1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-40px)}}
+@keyframes b2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,30px)}}
+@keyframes b3{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,50px)}}
+header{position:relative;z-index:10;padding:48px 24px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.logo-ar{font-family:'Noto Naskh Arabic',serif;font-size:clamp(48px,12vw,72px);font-weight:700;color:var(--gold);direction:rtl;text-shadow:0 0 60px rgba(232,197,109,.35);animation:logoGlow 3s ease-in-out infinite;}
+@keyframes logoGlow{0%,100%{text-shadow:0 0 40px rgba(232,197,109,.3)}50%{text-shadow:0 0 80px rgba(232,197,109,.55)}}
+.logo-fr{font-family:'Fredoka One',cursive;font-size:clamp(16px,5vw,24px);color:var(--muted);letter-spacing:4px;text-transform:uppercase;}
+.tagline{font-size:clamp(13px,3.5vw,16px);color:var(--muted);max-width:320px;line-height:1.6;margin-top:4px;}
+.star-row{display:flex;gap:6px;font-size:18px;animation:starDrift 4s ease-in-out infinite;}
+@keyframes starDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+#install-banner{display:none;margin:0 16px 20px;background:linear-gradient(135deg,rgba(78,205,196,.15),rgba(155,114,207,.15));border:1px solid rgba(78,205,196,.3);border-radius:16px;padding:14px 18px;align-items:center;gap:12px;max-width:520px;width:calc(100% - 32px);margin-left:auto;margin-right:auto;position:relative;z-index:10;}
+#install-banner.show{display:flex;}
+.install-text{flex:1;font-size:13px;line-height:1.5;}
+.install-text strong{color:var(--teal);}
+.install-btn{background:var(--teal);color:#0D0B1E;border:none;border-radius:12px;padding:8px 16px;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;flex-shrink:0;}
+.apps-section{position:relative;z-index:10;max-width:560px;margin:0 auto;padding:0 16px 60px;display:flex;flex-direction:column;gap:12px;}
+.slabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--muted);display:flex;align-items:center;gap:10px;margin-top:8px;}
+.slabel::before,.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+.app-card{background:var(--card);border-radius:22px;border:1.5px solid var(--border);padding:20px 20px 16px;cursor:pointer;text-decoration:none;display:block;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden;}
+.app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:22px 22px 0 0;opacity:0;transition:opacity .3s;}
+.app-card:hover{transform:translateY(-3px);}
+.app-card:hover::before{opacity:1;}
+.app-card:active{transform:scale(0.98);}
+.card-rocket::before{background:linear-gradient(90deg,var(--rose),var(--purple));}
+.card-rocket:hover{border-color:rgba(255,107,157,.35);box-shadow:0 12px 40px rgba(255,107,157,.1);}
+.card-star::before{background:linear-gradient(90deg,var(--gold),var(--amber));}
+.card-star:hover{border-color:rgba(232,197,109,.35);box-shadow:0 12px 40px rgba(232,197,109,.1);}
+.card-hard::before{background:linear-gradient(90deg,var(--teal),var(--blue));}
+.card-hard:hover{border-color:rgba(78,205,196,.35);box-shadow:0 12px 40px rgba(78,205,196,.1);}
+.card-pdf::before{background:linear-gradient(90deg,var(--green),var(--teal));}
+.card-pdf:hover{border-color:rgba(107,203,119,.35);box-shadow:0 12px 40px rgba(107,203,119,.1);}
+.card-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px;}
+.card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.card-rocket .card-icon{background:rgba(255,107,157,.15);}
+.card-star .card-icon{background:rgba(232,197,109,.15);}
+.card-hard .card-icon{background:rgba(78,205,196,.15);}
+.card-pdf .card-icon{background:rgba(107,203,119,.15);}
+.card-info{flex:1;}
+.card-title{font-family:'Fredoka One',cursive;font-size:clamp(17px,5vw,21px);line-height:1.1;margin-bottom:4px;}
+.card-rocket .card-title{color:var(--rose);}
+.card-star .card-title{color:var(--gold);}
+.card-hard .card-title{color:var(--teal);}
+.card-pdf .card-title{color:var(--green);}
+.card-sub{font-size:12px;color:var(--muted);line-height:1.55;}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.07);color:var(--muted);}
+.card-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.25;transition:opacity .2s,transform .2s;}
+.app-card:hover .card-arrow{opacity:.7;transform:translateY(-50%) translateX(4px);}
+footer{position:relative;z-index:10;text-align:center;padding:24px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);}
+.footer-ar{font-family:'Noto Naskh Arabic',serif;font-size:15px;color:var(--gold);opacity:.6;direction:rtl;display:block;margin-bottom:6px;}
+@media(display-mode:standalone){#install-banner{display:none!important;}header{padding-top:60px;}}
+</style>
+</head>
+<body>
+<div class="bg-mesh">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<header>
+  <div class="star-row">✦ ✧ ✦ ✧ ✦</div>
+  <div class="logo-ar">مُعَلِّمُنَا</div>
+  <div class="logo-fr">Muallimuna</div>
+  <p class="tagline">Apprendre l'arabe en s'amusant — pour les petits et les grands ✨</p>
+</header>
+
+<div id="install-banner">
+  <span style="font-size:24px">📲</span>
+  <div class="install-text"><strong>Installer l'app</strong><br>Ajoute Muallimuna sur ton écran d'accueil !</div>
+  <button class="install-btn" onclick="installApp()">Installer</button>
+</div>
+
+<div class="apps-section">
+
+  <div class="slabel">Pour les enfants</div>
+
+  <a class="app-card card-rocket" href="muallimuna-tdah-kids.html">
+    <div class="card-top">
+      <div class="card-icon">🚀</div>
+      <div class="card-info">
+        <div class="card-title">Mode Fusée</div>
+        <div class="card-sub">Vocabulaire arabe en images — animaux, fruits, couleurs, famille, islam, maison. Conçu pour les cerveaux TDAH.</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">5-8 ans</span><span class="tag">TDAH</span>
+      <span class="tag">6 thèmes</span><span class="tag">60 mots</span><span class="tag">🔊 Audio</span>
+    </div>
+    <span class="card-arrow">→</span>
+  </a>
+
+  <a class="app-card card-star" href="muallimuna-alphabet-tdah.html">
+    <div class="card-top">
+      <div class="card-icon">🌟</div>
+      <div class="card-info">
+        <div class="card-title">Les Lettres</div>
+        <div class="card-sub">Les 28 lettres de l'alphabet — traçage avec le doigt, prononciation, mots illustrés. Pour les 5 ans hyperactifs.</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">5-8 ans</span><span class="tag">TDAH</span>
+      <span class="tag">28 lettres</span><span class="tag">✏️ Tracé</span><span class="tag">🔊 Audio</span>
+    </div>
+    <span class="card-arrow">→</span>
+  </a>
+
+  <div class="slabel">Pour les apprenants</div>
+
+  <a class="app-card card-hard" href="muallimuna-lettres-difficiles.html">
+    <div class="card-top">
+      <div class="card-icon">🔥</div>
+      <div class="card-info">
+        <div class="card-title">Lettres Difficiles</div>
+        <div class="card-sub">12 lettres difficiles — غ ع ح خ ق ء ذ ظ ص ض ط ه — avec 140+ mots, féminins, pluriels et nuances.</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">Débutant+</span><span class="tag">12 lettres</span>
+      <span class="tag">140+ mots</span><span class="tag">Nuances</span>
+    </div>
+    <span class="card-arrow">→</span>
+  </a>
+
+  <a class="app-card card-pdf" href="muallimuna-alphabet-arabe.pdf" target="_blank">
+    <div class="card-top">
+      <div class="card-icon">📄</div>
+      <div class="card-info">
+        <div class="card-title">Livret PDF</div>
+        <div class="card-sub">30 pages A4 imprimables — une lettre par page avec formes, harakāt et vocabulaire illustré.</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">Imprimable</span><span class="tag">30 pages</span>
+      <span class="tag">Harakat</span><span class="tag">A4</span>
+    </div>
+    <span class="card-arrow">↗</span>
+  </a>
+
+</div>
+
+<footer>
+  <span class="footer-ar">بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيم</span>
+  Muallimuna · مُعَلِّمُنَا
+</footer>
+
+<script>
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+function installApp() {
+  if (!deferredPrompt) {
+    alert('Sur iPhone :\n1. Tape le bouton Partager ↑\n2. Puis "Sur l\'écran d\'accueil"\n\nSur Android :\nTon navigateur proposera l\'installation automatiquement.');
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    document.getElementById('install-banner').classList.remove('show');
+  });
+}
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.remove('show');
+});
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+</body>
+</html>

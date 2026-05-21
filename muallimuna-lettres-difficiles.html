@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muallimuna · Lettres Difficiles</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0F0E17; --surface:#1A1927; --surface2:#222133;
+  --border:rgba(255,255,255,0.07); --text:#EEE9FF; --muted:rgba(238,233,255,0.42);
+  --c-ghayn:#4ECDC4; --c-3ayn:#FF6B9D; --c-ha:#E8C56D; --c-qaf:#B39DDB;
+  --c-hamza:#FFB347; --c-kha:#7DD3FC; --c-dhal:#F9A8D4; --c-dha:#A7F3D0;
+  --c-sad:#FCA5A5; --c-dad:#C4B5FD; --c-ta:#FDE68A; --c-haw:#86EFAC;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+header{padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(15,14,23,0.96);backdrop-filter:blur(20px);z-index:60;}
+.logo{font-family:'Noto Naskh Arabic',serif;font-size:22px;color:#E8C56D;font-weight:700;}
+.htitle{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.badge{font-size:11px;font-weight:700;color:var(--muted);background:var(--surface2);padding:4px 12px;border-radius:20px;border:1px solid var(--border);}
+.tab-nav{display:flex;padding:0 12px;border-bottom:1px solid var(--border);background:rgba(15,14,23,0.92);backdrop-filter:blur(10px);position:sticky;top:53px;z-index:55;overflow-x:auto;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;padding:11px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tab-btn .tar{font-family:'Noto Naskh Arabic',serif;font-size:16px;direction:rtl;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--text);}
+.tab-btn[data-l="ghayn"].active{color:var(--c-ghayn);border-bottom-color:var(--c-ghayn);}
+.tab-btn[data-l="3ayn"].active{color:var(--c-3ayn);border-bottom-color:var(--c-3ayn);}
+.tab-btn[data-l="ha"].active{color:var(--c-ha);border-bottom-color:var(--c-ha);}
+.tab-btn[data-l="qaf"].active{color:var(--c-qaf);border-bottom-color:var(--c-qaf);}
+.tab-btn[data-l="hamza"].active{color:var(--c-hamza);border-bottom-color:var(--c-hamza);}
+.tab-btn[data-l="kha"].active{color:var(--c-kha);border-bottom-color:var(--c-kha);}
+.tab-btn[data-l="dhal"].active{color:var(--c-dhal);border-bottom-color:var(--c-dhal);}
+.tab-btn[data-l="dha"].active{color:var(--c-dha);border-bottom-color:var(--c-dha);}
+.tab-btn[data-l="sad"].active{color:var(--c-sad);border-bottom-color:var(--c-sad);}
+.tab-btn[data-l="dad"].active{color:var(--c-dad);border-bottom-color:var(--c-dad);}
+.tab-btn[data-l="ta"].active{color:var(--c-ta);border-bottom-color:var(--c-ta);}
+.tab-btn[data-l="haw"].active{color:var(--c-haw);border-bottom-color:var(--c-haw);}
+main{max-width:960px;margin:0 auto;padding:28px 18px 80px;}
+.section{display:none;}
+.section.active{display:block;animation:fi .35s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{display:flex;align-items:center;gap:22px;margin-bottom:22px;padding:24px 28px;border-radius:18px;border:1px solid var(--border);background:var(--surface);}
+.hero-letter{font-family:'Noto Naskh Arabic',serif;font-size:82px;font-weight:700;direction:rtl;line-height:1;flex-shrink:0;}
+.hero-info{flex:1;}
+.hero-name-ar{font-family:'Noto Naskh Arabic',serif;font-size:17px;font-weight:700;direction:rtl;display:block;margin-bottom:2px;color:var(--muted);}
+.hero-name-fr{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;display:block;margin-bottom:7px;}
+.hero-desc{font-size:12px;color:var(--muted);line-height:1.7;max-width:420px;}
+.hero-forms{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap;}
+.fp{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;text-align:center;}
+.fp-l{font-size:8px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:2px;}
+.fp-a{font-family:'Noto Naskh Arabic',serif;font-size:17px;direction:rtl;display:block;}
+.tip{border-radius:11px;padding:11px 15px;font-size:12px;line-height:1.7;font-weight:500;margin-bottom:20px;border:1px solid;display:flex;gap:9px;}
+.tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.slabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+.nuance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:9px;margin-bottom:26px;}
+.ncard{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px;}
+.ncard-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:9px;}
+.ncard-row{display:flex;gap:9px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border);}
+.ncard-row:last-child{border-bottom:none;padding-bottom:0;}
+.ncard-ar{font-family:'Noto Naskh Arabic',serif;font-size:19px;direction:rtl;flex-shrink:0;min-width:65px;text-align:right;}
+.ncard-ph{font-size:11px;font-weight:700;display:block;}
+.ncard-def{font-size:11px;color:var(--muted);display:block;line-height:1.5;}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px;margin-bottom:28px;}
+.wcard{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px 12px;display:flex;flex-direction:column;gap:3px;transition:all .2s;}
+.wcard:hover{transform:translateY(-2px);}
+.wcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:2px;}
+.wcard-ar{font-family:'Noto Naskh Arabic',serif;font-size:25px;font-weight:500;direction:rtl;line-height:1.35;color:var(--text);}
+.wcard-emoji{font-size:19px;flex-shrink:0;margin-top:3px;}
+.wcard-ph{font-size:11px;font-weight:700;letter-spacing:.2px;}
+.wcard-fr{font-size:11px;color:var(--muted);font-weight:500;}
+.wcard-meta{display:flex;flex-direction:column;gap:3px;margin-top:7px;padding-top:7px;border-top:1px solid var(--border);}
+.meta-row{display:flex;align-items:baseline;gap:6px;}
+.meta-tag{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);flex-shrink:0;min-width:28px;}
+.meta-ar{font-family:'Noto Naskh Arabic',serif;font-size:15px;direction:rtl;color:rgba(238,233,255,0.6);}
+.meta-ph{font-size:9px;color:var(--muted);font-weight:600;}
+.wnote{background:var(--surface2);border-radius:8px;padding:7px 10px;margin-top:5px;font-size:10px;line-height:1.6;color:rgba(238,233,255,0.55);}
+
+/* Per-letter accent */
+.ghayn .wcard-ph,.ghayn .hero-name-fr,.ghayn .hero-letter{color:var(--c-ghayn);}
+.ghayn .wcard:hover{border-color:rgba(78,205,196,.3);box-shadow:0 5px 20px rgba(78,205,196,.07);}
+.ghayn .tip{background:rgba(78,205,196,.07);border-color:rgba(78,205,196,.2);color:rgba(78,205,196,.9);}
+.c3ayn .wcard-ph,.c3ayn .hero-name-fr,.c3ayn .hero-letter{color:var(--c-3ayn);}
+.c3ayn .wcard:hover{border-color:rgba(255,107,157,.3);box-shadow:0 5px 20px rgba(255,107,157,.07);}
+.c3ayn .tip{background:rgba(255,107,157,.07);border-color:rgba(255,107,157,.2);color:rgba(255,107,157,.9);}
+.ha .wcard-ph,.ha .hero-name-fr,.ha .hero-letter{color:var(--c-ha);}
+.ha .wcard:hover{border-color:rgba(232,197,109,.3);box-shadow:0 5px 20px rgba(232,197,109,.07);}
+.ha .tip{background:rgba(232,197,109,.07);border-color:rgba(232,197,109,.2);color:rgba(232,197,109,.9);}
+.qaf .wcard-ph,.qaf .hero-name-fr,.qaf .hero-letter{color:var(--c-qaf);}
+.qaf .wcard:hover{border-color:rgba(179,157,219,.3);box-shadow:0 5px 20px rgba(179,157,219,.07);}
+.qaf .tip{background:rgba(179,157,219,.07);border-color:rgba(179,157,219,.2);color:rgba(179,157,219,.9);}
+.hamza .wcard-ph,.hamza .hero-name-fr,.hamza .hero-letter{color:var(--c-hamza);}
+.hamza .wcard:hover{border-color:rgba(255,179,71,.3);box-shadow:0 5px 20px rgba(255,179,71,.07);}
+.hamza .tip{background:rgba(255,179,71,.07);border-color:rgba(255,179,71,.2);color:rgba(255,179,71,.9);}
+.kha .wcard-ph,.kha .hero-name-fr,.kha .hero-letter{color:var(--c-kha);}
+.kha .wcard:hover{border-color:rgba(125,211,252,.3);box-shadow:0 5px 20px rgba(125,211,252,.07);}
+.kha .tip{background:rgba(125,211,252,.07);border-color:rgba(125,211,252,.2);color:rgba(125,211,252,.9);}
+.dhal .wcard-ph,.dhal .hero-name-fr,.dhal .hero-letter{color:var(--c-dhal);}
+.dhal .wcard:hover{border-color:rgba(249,168,212,.3);box-shadow:0 5px 20px rgba(249,168,212,.07);}
+.dhal .tip{background:rgba(249,168,212,.07);border-color:rgba(249,168,212,.2);color:rgba(249,168,212,.9);}
+.dha .wcard-ph,.dha .hero-name-fr,.dha .hero-letter{color:var(--c-dha);}
+.dha .wcard:hover{border-color:rgba(167,243,208,.3);box-shadow:0 5px 20px rgba(167,243,208,.07);}
+.dha .tip{background:rgba(167,243,208,.07);border-color:rgba(167,243,208,.2);color:rgba(167,243,208,.9);}
+.sad .wcard-ph,.sad .hero-name-fr,.sad .hero-letter{color:var(--c-sad);}
+.sad .wcard:hover{border-color:rgba(252,165,165,.3);box-shadow:0 5px 20px rgba(252,165,165,.07);}
+.sad .tip{background:rgba(252,165,165,.07);border-color:rgba(252,165,165,.2);color:rgba(252,165,165,.9);}
+.dad .wcard-ph,.dad .hero-name-fr,.dad .hero-letter{color:var(--c-dad);}
+.dad .wcard:hover{border-color:rgba(196,181,253,.3);box-shadow:0 5px 20px rgba(196,181,253,.07);}
+.dad .tip{background:rgba(196,181,253,.07);border-color:rgba(196,181,253,.2);color:rgba(196,181,253,.9);}
+.ta .wcard-ph,.ta .hero-name-fr,.ta .hero-letter{color:var(--c-ta);}
+.ta .wcard:hover{border-color:rgba(253,230,138,.3);box-shadow:0 5px 20px rgba(253,230,138,.07);}
+.ta .tip{background:rgba(253,230,138,.07);border-color:rgba(253,230,138,.2);color:rgba(253,230,138,.9);}
+.haw .wcard-ph,.haw .hero-name-fr,.haw .hero-letter{color:var(--c-haw);}
+.haw .wcard:hover{border-color:rgba(134,239,172,.3);box-shadow:0 5px 20px rgba(134,239,172,.07);}
+.haw .tip{background:rgba(134,239,172,.07);border-color:rgba(134,239,172,.2);color:rgba(134,239,172,.9);}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo">مُعَلِّمُنَا</span>
+  <span class="htitle">Lettres Difficiles</span>
+  <span class="badge">12 lettres · 140+ mots</span>
+</header>
+<nav class="tab-nav">
+  <button class="tab-btn active" data-l="ghayn" onclick="show('ghayn',this)"><span class="tar">غ</span>Ghayn</button>
+  <button class="tab-btn" data-l="3ayn"  onclick="show('3ayn',this)"><span class="tar">ع</span>3ayn</button>
+  <button class="tab-btn" data-l="ha"    onclick="show('ha',this)"><span class="tar">ح</span>Hâ</button>
+  <button class="tab-btn" data-l="kha"   onclick="show('kha',this)"><span class="tar">خ</span>Kha</button>
+  <button class="tab-btn" data-l="qaf"   onclick="show('qaf',this)"><span class="tar">ق</span>Qaf</button>
+  <button class="tab-btn" data-l="hamza" onclick="show('hamza',this)"><span class="tar">ء</span>Hamza</button>
+  <button class="tab-btn" data-l="dhal"  onclick="show('dhal',this)"><span class="tar">ذ</span>Dhâl</button>
+  <button class="tab-btn" data-l="dha"   onclick="show('dha',this)"><span class="tar">ظ</span>Dhâ emp.</button>
+  <button class="tab-btn" data-l="sad"   onclick="show('sad',this)"><span class="tar">ص</span>Sâd emp.</button>
+  <button class="tab-btn" data-l="dad"   onclick="show('dad',this)"><span class="tar">ض</span>Dâd emp.</button>
+  <button class="tab-btn" data-l="ta"    onclick="show('ta',this)"><span class="tar">ط</span>Tâ emp.</button>
+  <button class="tab-btn" data-l="haw"   onclick="show('haw',this)"><span class="tar">ه</span>Hâ léger</button>
+</nav>
+<main id="main"></main>
+<script>
+const D=[
+{id:'ghayn',cls:'ghayn',ar:'غ',nameAr:'غَيْن',nameFr:'Ghayn',
+forms:[{l:'Isolée',a:'غ'},{l:'Début',a:'غـ'},{l:'Milieu',a:'ـغـ'},{l:'Fin',a:'ـغ'}],
+desc:'Son guttural grasseyé — comme le R parisien très marqué, du fond de la gorge. S\'attache des deux côtés.',
+tip:'🔊 Prononce un R parisien très exagéré en faisant vibrer la luette. Notation : gh.',
+nuances:[
+  {title:'غَابَة / غَابَ — même racine, sens très différents',rows:[
+    {ar:'غَابَة',ph:'ghâba',def:'la forêt (nom fém.) — plur. غَابَات ghâbât'},
+    {ar:'غَابَ',ph:'ghâba',def:'il s\'est absenté / il est parti / il est dans ses pensées (verbe)'},
+    {ar:'غَائِب',ph:'ghâ\'ib',def:'absent (adj.) — fém. غَائِبَة — plur. غَائِبُون'},
+    {ar:'غَيَاب',ph:'ghayâb',def:'absence (nom) — état d\'être absent'},
+  ]},
+  {title:'غَيْب ≠ غَائِب',rows:[
+    {ar:'غَيْب',ph:'ghayb',def:'l\'invisible / domaine caché à l\'humain (concept métaphysique islamique)'},
+    {ar:'غَائِب',ph:'ghâ\'ib',def:'absent — une personne concrète qui n\'est pas là'},
+    {ar:'مَغِيب',ph:'maghîb',def:'le moment du coucher (du soleil) — quand le soleil "disparaît"'},
+  ]},
+],
+words:[
+  {ar:'غَيْمَة',ph:'ghayma',fr:'nuage',e:'☁️',pl:'غُيُوم',plph:'ghoyoûm'},
+  {ar:'غَابَة',ph:'ghâba',fr:'forêt',e:'🌲',pl:'غَابَات',plph:'ghâbât',note:'≠ غَابَ (il s\'est absenté) — même forme, sens opposés'},
+  {ar:'غُرْفَة',ph:'ghourfa',fr:'chambre / pièce',e:'🛏️',pl:'غُرَف',plph:'ghouraf'},
+  {ar:'غِذَاء',ph:'ghidhâ\'',fr:'nourriture / repas',e:'🍽️',pl:'أَغْذِيَة',plph:'\'aghdiya'},
+  {ar:'غَنَم',ph:'ghanam',fr:'moutons / troupeau',e:'🐏',note:'collectif — sing. fém. شَاة châ\'a (brebis)'},
+  {ar:'غَضَب',ph:'ghadab',fr:'colère',e:'😤',adj:'غَاضِب',adjph:'ghâdib — en colère / fém. غَاضِبَة'},
+  {ar:'غِنَاء',ph:'ghinâ\'',fr:'chant',e:'🎵',pl:'أَغَانٍ',plph:'\'aghânî (chansons)'},
+  {ar:'غَيْب',ph:'ghayb',fr:'l\'invisible / l\'inconnu',e:'🔮',note:'≠ غَائِب (absent concret) — voir nuances'},
+  {ar:'غَرِيب',ph:'gharîb',fr:'étrange / étranger',e:'😵',fem:'غَرِيبَة',femph:'gharîba',pl:'غُرَبَاء',plph:'ghourabâ\''},
+  {ar:'غُرُوب',ph:'ghourûb',fr:'coucher du soleil',e:'🌅',note:'غُرُوب الشَّمْس = coucher complet — de غَابَ (disparaître)'},
+  {ar:'غَسَلَ',ph:'ghasala',fr:'laver (verbe)',e:'🫧',note:'مَصْدَر: غَسْل ghasl — le lavage'},
+  {ar:'غَوَّاص',ph:'ghawwâs',fr:'plongeur',e:'🤿',fem:'غَوَّاصَة',femph:'ghawwâsa',pl:'غَوَّاصُون',plph:'ghawwâsoûn'},
+  {ar:'مَغْرِب',ph:'maghrib',fr:'Maghreb / occident / prière du soir',e:'🌆',note:'مَغْرِب الشَّمْس = coucher. De غَرَبَ = aller à l\'ouest'},
+]},
+
+{id:'3ayn',cls:'c3ayn',ar:'ع',nameAr:'عَيْن',nameFr:'3ayn',
+forms:[{l:'Isolée',a:'ع'},{l:'Début',a:'عـ'},{l:'Milieu',a:'ـعـ'},{l:'Fin',a:'ـع'}],
+desc:'Son pharyngé unique — gorge contractée, "a" étranglé du fond de la gorge. Aucun équivalent français. Noté 3.',
+tip:'🔊 Serre la gorge et expire un souffle sonore et vocal. Comme un "ah" en contractant fort le fond de la gorge.',
+nuances:[
+  {title:'عَيْن — quatre sens pour un mot',rows:[
+    {ar:'عَيْن',ph:'3ayn',def:'œil (anatomie) — plur. عُيُون 3oyoûn'},
+    {ar:'عَيْن',ph:'3ayn',def:'source d\'eau — plur. عُيُون 3oyoûn (même pluriel !)'},
+    {ar:'عَيْن',ph:'3ayn',def:'la lettre ع elle-même'},
+    {ar:'عَيْن',ph:'3ayn',def:'espion / observateur (sens littéraire classique)'},
+  ]},
+  {title:'3ilm / 3âlim / 3âlam — même racine ع-ل-م',rows:[
+    {ar:'عِلْم',ph:'3ilm',def:'science / savoir (abstrait) — plur. عُلُوم 3oloûm'},
+    {ar:'عَالِم',ph:'3âlim',def:'savant / celui qui sait — plur. عُلَمَاء 3oulamâ\''},
+    {ar:'عَالَم',ph:'3âlam',def:'monde / univers — plur. عَوَالِم 3awâlim'},
+    {ar:'مَعْلُومَة',ph:'ma3loûma',def:'information — plur. مَعْلُومَات ma3loûmât'},
+  ]},
+],
+words:[
+  {ar:'عَيْن',ph:'3ayn',fr:'œil / source d\'eau',e:'👁️',pl:'عُيُون',plph:'3oyoûn'},
+  {ar:'عَسَل',ph:'3asal',fr:'miel',e:'🍯',note:'collectif — pas de pluriel usuel'},
+  {ar:'عِلْم',ph:'3ilm',fr:'science / savoir',e:'📖',pl:'عُلُوم',plph:'3oloûm',note:'≠ عَالَم (monde) ≠ عَالِم (savant)'},
+  {ar:'عِنَب',ph:'3inab',fr:'raisin',e:'🍇',note:'collectif — حَبَّة عِنَب = un grain de raisin'},
+  {ar:'ثُعْبَان',ph:'thu3bân',fr:'serpent',e:'🐍',pl:'ثَعَابِين',plph:'tha3âbîn'},
+  {ar:'عَظِيم',ph:'3adhîm',fr:'immense / formidable',e:'🌟',fem:'عَظِيمَة',femph:'3adhîma',pl:'عُظَمَاء',plph:'3oudhamâ\''},
+  {ar:'عَمّ',ph:'3amm',fr:'oncle paternel',e:'👨',fem:'عَمَّة',femph:'3amma (tante pat.)',pl:'أَعْمَام',plph:'\'a3mâm'},
+  {ar:'عِبَادَة',ph:'3ibâda',fr:'adoration / culte',e:'🕌',pl:'عِبَادَات',plph:'3ibâdât'},
+  {ar:'عُقَاب',ph:'3uqâb',fr:'aigle',e:'🦅',pl:'عِقْبَان',plph:'3iqbân'},
+  {ar:'عَالَم',ph:'3âlam',fr:'monde / univers',e:'🌍',pl:'عَوَالِم',plph:'3awâlim',note:'≠ عَالِم (savant) — voir nuances'},
+  {ar:'عِطْر',ph:'3itr',fr:'parfum',e:'🌺',pl:'عُطُور',plph:'3otour'},
+  {ar:'عَفْو',ph:'3afw',fr:'pardon / grâce',e:'😊',note:'عَفَا 3afâ = pardonner (v.) — عَفْواً = pardon / de rien'},
+  {ar:'عُصْفُور',ph:'3ousfour',fr:'moineau',e:'🐦',pl:'عَصَافِير',plph:'3asâfîr'},
+  {ar:'عَدَالَة',ph:'3adâla',fr:'justice',e:'⚖️',adj:'عَادِل',adjph:'3âdil — juste / fém. عَادِلَة'},
+]},
+
+{id:'ha',cls:'ha',ar:'ح',nameAr:'حَاء',nameFr:'Hâ soufflé',
+forms:[{l:'Isolée',a:'ح'},{l:'Début',a:'حـ'},{l:'Milieu',a:'ـحـ'},{l:'Fin',a:'ـح'}],
+desc:'H soufflé pharyngé — souffle chaud et fort du fond de la gorge. ≠ هـ (H léger). Même forme que ج et خ mais sans point.',
+tip:'🔊 Souffle fort sur ta main comme pour l\'embuer. C\'est plus profond et plus chaud qu\'un H simple. Noté H majuscule.',
+nuances:[
+  {title:'حَال / حَالَة / حَالاً — trois usages',rows:[
+    {ar:'حَال',ph:'Hâl',def:'état actuel / situation — كَيْفَ حَالُكَ = comment vas-tu ?'},
+    {ar:'حَالَة',ph:'Hâla',def:'cas particulier / situation — plur. حَالَات Hâlât'},
+    {ar:'حَالاً',ph:'Hâlan',def:'immédiatement / tout de suite (adverbe de temps)'},
+  ]},
+  {title:'حَقّ ≠ حَقِيقَة',rows:[
+    {ar:'حَقّ',ph:'Haqq',def:'droit / vérité absolue — هَذَا حَقِّي = c\'est mon droit'},
+    {ar:'حَقِيقَة',ph:'Haqîqa',def:'réalité / fait concret — plur. حَقَائِق Haqâ\'iq'},
+    {ar:'حَقِيقِيّ',ph:'Haqîqî',def:'réel / vrai (adj.) — fém. حَقِيقِيَّة'},
+  ]},
+],
+words:[
+  {ar:'حِصَان',ph:'Hisân',fr:'cheval (mâle)',e:'🐴',fem:'فَرَس',femph:'faras (jument)',pl:'خُيُول',plph:'khoyoûl'},
+  {ar:'حَلِيب',ph:'Halîb',fr:'lait',e:'🥛',note:'collectif — pas de pluriel usuel'},
+  {ar:'حَدِيقَة',ph:'Hadîqa',fr:'jardin',e:'🌷',pl:'حَدَائِق',plph:'Hadâ\'iq'},
+  {ar:'حَقِيبَة',ph:'Haqîba',fr:'sac / valise',e:'🎒',pl:'حَقَائِب',plph:'Haqâ\'ib'},
+  {ar:'حَمَامَة',ph:'Hamâma',fr:'colombe / pigeon',e:'🕊️',pl:'حَمَام',plph:'Hamâm (collectif)'},
+  {ar:'بَحْر',ph:'baHr',fr:'mer',e:'🌊',pl:'بِحَار / بُحُور',plph:'biHâr / bouHoûr'},
+  {ar:'حَجّ',ph:'Hajj',fr:'pèlerinage',e:'🕌',note:'حَاجّ = pèlerin — fém. حَاجَّة Hâjja'},
+  {ar:'حُبّ',ph:'Houbb',fr:'amour',e:'❤️',note:'حَبِيب Habîb = bien-aimé — plur. أَحِبَّاء \'aHibbâ\''},
+  {ar:'حِكْمَة',ph:'Hikma',fr:'sagesse',e:'💡',pl:'حِكَم',plph:'Hikam — proverbes / sagesses'},
+  {ar:'حَيَاة',ph:'Hayât',fr:'vie',e:'🫀',adj:'حَيّ',adjph:'Hayy — vivant (adj.)'},
+  {ar:'حَقّ',ph:'Haqq',fr:'droit / vérité',e:'⚖️',pl:'حُقُوق',plph:'Houqoûq',note:'≠ حَقِيقَة (réalité concrète)'},
+  {ar:'حُوت',ph:'Hout',fr:'baleine / grand poisson',e:'🐋',pl:'حِيتَان',plph:'Hîtân'},
+  {ar:'حَيَوَان',ph:'Hayawân',fr:'animal',e:'🦊',pl:'حَيَوَانَات',plph:'Hayawânât'},
+  {ar:'حِنَّاء',ph:'Hinnâ\'',fr:'henné',e:'🌿',note:'collectif — pas de pluriel usuel'},
+]},
+
+{id:'kha',cls:'kha',ar:'خ',nameAr:'خَاء',nameFr:'Kha',
+forms:[{l:'Isolée',a:'خ'},{l:'Début',a:'خـ'},{l:'Milieu',a:'ـخـ'},{l:'Fin',a:'ـخ'}],
+desc:'KH guttural — comme le R allemand de "Bach" ou le J espagnol. Même forme que ح et ج + 1 point au-dessus.',
+tip:'🔊 Prononce un K en laissant l\'air frotter contre le fond du palais. Comme se racler légèrement la gorge.',
+nuances:[
+  {title:'خَبَر / خَبَرَة / خَبِير — même racine خ-ب-ر',rows:[
+    {ar:'خَبَر',ph:'khabar',def:'nouvelle / information — plur. أَخْبَار \'akhbâr'},
+    {ar:'خَبَرَة',ph:'khabara',def:'expérience / expertise — plur. خِبَرَات khibarât'},
+    {ar:'خَبِير',ph:'khabîr',def:'expert / spécialiste — plur. خُبَرَاء khoubarâ\''},
+  ]},
+  {title:'خَيْر ≠ خِيَار ≠ خَيَال',rows:[
+    {ar:'خَيْر',ph:'khayr',def:'bien / bienveillance — plur. خَيْرَات khayrât'},
+    {ar:'خِيَار',ph:'khiyâr',def:'choix (option) ET concombre — deux sens sans rapport !'},
+    {ar:'خَيَال',ph:'khayâl',def:'imagination / fantôme — plur. خَيَالَات khayâlât'},
+  ]},
+],
+words:[
+  {ar:'خُبْز',ph:'khobz',fr:'pain',e:'🍞',note:'collectif — رَغِيف raghîf = une miche de pain'},
+  {ar:'خَرُوف',ph:'kharûf',fr:'mouton (mâle)',e:'🐑',fem:'نَعْجَة',femph:'na3ja (brebis)',pl:'خِرْفَان',plph:'khirfân'},
+  {ar:'خَاتَم',ph:'khâtam',fr:'bague / anneau',e:'💍',pl:'خَوَاتِم',plph:'khawâtim'},
+  {ar:'خَرِيطَة',ph:'kharîta',fr:'carte / plan',e:'🗺️',pl:'خَرَائِط',plph:'kharâ\'it'},
+  {ar:'خَبَر',ph:'khabar',fr:'nouvelle / info',e:'📰',pl:'أَخْبَار',plph:'\'akhbâr',note:'≠ خَبَرَة (expérience) — voir nuances'},
+  {ar:'خَطَر',ph:'khatar',fr:'danger / risque',e:'⚠️',pl:'أَخْطَار',plph:'\'akhtâr',adj:'خَطِير',adjph:'khatîr — dangereux'},
+  {ar:'خَيْر',ph:'khayr',fr:'bien / bienveillance',e:'✨',pl:'خَيْرَات',plph:'khayrât',note:'≠ خِيَار (choix / concombre)'},
+  {ar:'خِيَار',ph:'khiyâr',fr:'choix / concombre',e:'🥒',note:'double sens : option à choisir ET légume — même mot !'},
+  {ar:'خَجَل',ph:'khajal',fr:'honte / gêne',e:'😳',adj:'خَجُول',adjph:'khajoûl — timide / honteux'},
+  {ar:'مَطْبَخ',ph:'matbakh',fr:'cuisine (pièce)',e:'🍳',pl:'مَطَابِخ',plph:'matâbikh'},
+  {ar:'خُطْبَة',ph:'khotba',fr:'sermon / discours',e:'🎤',pl:'خُطَب',plph:'khotab'},
+  {ar:'خَيَال',ph:'khayâl',fr:'imagination / fantôme',e:'💭',pl:'خَيَالَات',plph:'khayâlât',note:'خَيَالِيّ = imaginaire / fantastique'},
+  {ar:'أَخْضَر',ph:'\'akhdar',fr:'vert',e:'🌿',fem:'خَضْرَاء',femph:'khadrâ\'',pl:'خُضْر',plph:'khoudr'},
+]},
+
+{id:'qaf',cls:'qaf',ar:'ق',nameAr:'قَاف',nameFr:'Qâf',
+forms:[{l:'Isolée',a:'ق'},{l:'Début',a:'قـ'},{l:'Milieu',a:'ـقـ'},{l:'Fin',a:'ـق'}],
+desc:'K uvulaire — prononcé tout au fond de la gorge, là où la luette vibre. 2 points au-dessus. En dialecte algérien : souvent G.',
+tip:'🔊 Mets la langue tout au fond du palais contre la luette, bloque puis relâche l\'air. Plus grave et profond qu\'un K.',
+nuances:[
+  {title:'قَلْب — verbe et nom imbriqués',rows:[
+    {ar:'قَلْب',ph:'qalb',def:'cœur (organe / sens figuré) — plur. قُلُوب qoloûb'},
+    {ar:'قَلَّبَ',ph:'qallaba',def:'retourner dans tous les sens (verbe transitif)'},
+    {ar:'تَقَلَّبَ',ph:'taqallaba',def:'se retourner / changer (verbe réfléchi)'},
+    {ar:'انْقِلَاب',ph:'inqilâb',def:'renversement / coup d\'état — de قَلَبَ (retourner)'},
+  ]},
+  {title:'قِصَّة ≠ قَصِيدَة ≠ قِصَاص',rows:[
+    {ar:'قِصَّة',ph:'qissa',def:'histoire / conte — plur. قِصَص qisas'},
+    {ar:'قَصِيدَة',ph:'qasîda',def:'poème long — plur. قَصَائِد qasâ\'id'},
+    {ar:'قِصَاص',ph:'qisâs',def:'talion / rétribution — principe juridique islamique'},
+  ]},
+],
+words:[
+  {ar:'قَمَر',ph:'qamar',fr:'lune',e:'🌙',pl:'أَقْمَار',plph:'\'aqmâr'},
+  {ar:'قُرْآن',ph:'qour\'ân',fr:'Coran',e:'📖',note:'قَارِئ qâri\' = récitant — plur. قُرَّاء qourrâ\''},
+  {ar:'قَلَم',ph:'qalam',fr:'stylo / crayon',e:'✏️',pl:'أَقْلَام',plph:'\'aqlâm'},
+  {ar:'قِطَّة',ph:'qitta',fr:'chatte',e:'🐱',masc:'قِطّ',mascph:'qitt (chat mâle)',pl:'قِطَط',plph:'qitat'},
+  {ar:'قَهْوَة',ph:'qahwa',fr:'café',e:'☕',note:'قَهْوَجِيّ = cafetier (dialectal algérien)'},
+  {ar:'قَلْب',ph:'qalb',fr:'cœur',e:'🫀',pl:'قُلُوب',plph:'qoloûb',note:'≠ قَلَّبَ (retourner) — voir nuances'},
+  {ar:'قِصَّة',ph:'qissa',fr:'histoire / conte',e:'🎤',pl:'قِصَص',plph:'qisas',note:'≠ قَصِيدَة (poème long)'},
+  {ar:'قُوَّة',ph:'qouwwa',fr:'force / puissance',e:'⚡',pl:'قُوًى',plph:'qouwan',adj:'قَوِيّ',adjph:'qawiyy — fort (fém. قَوِيَّة)'},
+  {ar:'قَلْعَة',ph:'qal3a',fr:'forteresse / citadelle',e:'🏰',pl:'قِلَاع',plph:'qilâ3'},
+  {ar:'قِيمَة',ph:'qîma',fr:'valeur / prix',e:'💎',pl:'قِيَم',plph:'qiyam'},
+  {ar:'قَدَم',ph:'qadam',fr:'pied',e:'🦶',pl:'أَقْدَام',plph:'\'aqdâm'},
+  {ar:'قَوْس',ph:'qaws',fr:'arc / arc-en-ciel',e:'🌈',pl:'أَقْوَاس',plph:'\'aqwâs'},
+  {ar:'قَصْر',ph:'qasr',fr:'palais / château',e:'🏯',pl:'قُصُور',plph:'qousoûr'},
+]},
+
+{id:'hamza',cls:'hamza',ar:'ء',nameAr:'هَمْزَة',nameFr:'Hamza',
+forms:[{l:'Seule',a:'ء'},{l:'Sur alif',a:'أ / إ'},{l:'Sur wâw',a:'ؤ'},{l:'Sur yâ',a:'ئ'}],
+desc:'Coup de glotte — arrêt brutal du souffle dans la gorge. S\'écrit sur différents supports selon sa position. Noté \' en phonétique.',
+tip:'🔊 Bloque l\'air une fraction de seconde dans la gorge. Comme entre les deux syllabes de "oh-oh !". Le support (أ ؤ ئ ء) change mais le son est le même.',
+nuances:[
+  {title:'أَمَل / آمَلَ / أَمَّلَ — espoir',rows:[
+    {ar:'أَمَل',ph:'\'amal',def:'espoir (nom) — plur. آمَال \'âmâl'},
+    {ar:'أَمَلَ',ph:'\'amala',def:'espérer (verbe)'},
+    {ar:'آمَلَ',ph:'\'âmala',def:'donner de l\'espoir à quelqu\'un (forme II)'},
+  ]},
+  {title:'مَاء / سَمَاء / دُعَاء — hamza finale',rows:[
+    {ar:'مَاء',ph:'mâ\'',def:'eau (sing.) — plur. مِيَاه miyâh'},
+    {ar:'سَمَاء',ph:'samâ\'',def:'ciel — plur. سَمَاوَات samâwât'},
+    {ar:'دُعَاء',ph:'dou3â\'',def:'supplication / invocation — plur. أَدْعِيَة \'ad3iya'},
+    {ar:'هَوَاء',ph:'hawâ\'',def:'air / atmosphère — note : ء finale ici'},
+  ]},
+],
+words:[
+  {ar:'أَرْنَب',ph:'\'arnab',fr:'lapin',e:'🐇',pl:'أَرَانِب',plph:'\'arânib'},
+  {ar:'أُمّ',ph:'\'oumm',fr:'mère / maman',e:'👩',pl:'أُمَّهَات',plph:'\'oummahât'},
+  {ar:'أَخ',ph:'\'akh',fr:'frère',e:'👦',fem:'أُخْت',femph:'\'okht (sœur)',pl:'إِخْوَة',plph:'\'ikhwa'},
+  {ar:'مُؤْمِن',ph:'mu\'min',fr:'croyant',e:'🙏',fem:'مُؤْمِنَة',femph:'mu\'mina',pl:'مُؤْمِنُون',plph:'mu\'minoûn'},
+  {ar:'سُؤَال',ph:'sou\'âl',fr:'question',e:'❓',pl:'أَسْئِلَة',plph:'\'as\'ila'},
+  {ar:'مَاء',ph:'mâ\'',fr:'eau',e:'💧',pl:'مِيَاه',plph:'miyâh'},
+  {ar:'رَئِيس',ph:'ra\'îs',fr:'président / chef',e:'📰',fem:'رَئِيسَة',femph:'ra\'îsa',pl:'رُؤَسَاء',plph:'rou\'asâ\''},
+  {ar:'دُعَاء',ph:'dou3â\'',fr:'supplication / invocation',e:'🤲',pl:'أَدْعِيَة',plph:'\'ad3iya'},
+  {ar:'قِرَاءَة',ph:'qirâ\'a',fr:'lecture',e:'📚',note:'قَرَأَ qara\'a = lire (v.) — قَارِئ = lecteur/récitant'},
+  {ar:'أَحْمَر',ph:'\'aHmar',fr:'rouge',e:'🔴',fem:'حَمْرَاء',femph:'Hamrâ\'',pl:'حُمْر',plph:'Houmr'},
+  {ar:'مَلَائِكَة',ph:'malâ\'ika',fr:'anges',e:'👼',sing:'مَلَك',singph:'malak = ange (sing.)'},
+  {ar:'طَائِر',ph:'tâ\'ir',fr:'oiseau',e:'🐦',pl:'طُيُور',plph:'touyoûr'},
+  {ar:'إِسْلَام',ph:'\'islâm',fr:'Islam',e:'🌙',note:'أَسْلَمَ \'aslama = se soumettre / embrasser l\'islam'},
+]},
+
+{id:'dhal',cls:'dhal',ar:'ذ',nameAr:'ذَال',nameFr:'Dhâl',
+forms:[{l:'Isolée',a:'ذ'},{l:'Début',a:'ذَ'},{l:'Milieu',a:'ـذَ'},{l:'Fin',a:'ـذ'}],
+desc:'TH sonore anglais — comme dans "this" ou "the". NE S\'ATTACHE PAS à la lettre suivante. Même forme que دال + 1 point.',
+tip:'🔊 Mets la langue entre les dents et fais vibrer. C\'est le TH de "this" (sonore), pas de "think" (sourd).',
+nuances:[
+  {title:'ذَهَبَ ≠ ذَهَب — un verbe, un métal',rows:[
+    {ar:'ذَهَبَ',ph:'dhahaba',def:'partir / aller (verbe) — ذَهَبَ إِلَى = il est allé à'},
+    {ar:'ذَهَب',ph:'dhahab',def:'or (métal précieux) — خَاتَم ذَهَب = bague en or'},
+    {ar:'مَذْهَب',ph:'madhhab',def:'école de pensée / rite (islamique) — plur. مَذَاهِب madhâhib'},
+  ]},
+  {title:'ذَكَرَ / ذِكْر / ذَاكِرَ / ذَاكِرَة',rows:[
+    {ar:'ذَكَرَ',ph:'dhakara',def:'mentionner / se souvenir (verbe)'},
+    {ar:'ذِكْر',ph:'dhikr',def:'mention / invocation d\'Allah'},
+    {ar:'ذَاكَرَ',ph:'dhâkara',def:'réviser ses leçons (verbe)'},
+    {ar:'ذَاكِرَة',ph:'dhâkira',def:'mémoire (faculté) — ≠ ذِكْر'},
+  ]},
+],
+words:[
+  {ar:'ذِئْب',ph:'dhi\'b',fr:'loup',e:'🐺',pl:'ذِئَاب',plph:'dhi\'âb'},
+  {ar:'ذَهَب',ph:'dhahab',fr:'or (métal)',e:'🥇',note:'≠ ذَهَبَ (partir) — voir nuances'},
+  {ar:'ذَنْب',ph:'dhanb',fr:'faute / péché',e:'😔',pl:'ذُنُوب',plph:'dhounoûb'},
+  {ar:'ذَاكِرَة',ph:'dhâkira',fr:'mémoire',e:'🧠',note:'≠ ذِكْر (invocation) — voir nuances'},
+  {ar:'ذُرَة',ph:'dhoura',fr:'maïs',e:'🌽',note:'collectif — pas de pluriel usuel'},
+  {ar:'ذَكِيّ',ph:'dhakiyy',fr:'intelligent',e:'💡',fem:'ذَكِيَّة',femph:'dhakiyya',pl:'أَذْكِيَاء',plph:'\'adhkiyâ\''},
+  {ar:'ذُبَابَة',ph:'dhoubâba',fr:'mouche',e:'🪰',pl:'ذُبَاب',plph:'dhoubâb (collectif)'},
+  {ar:'ذِكْر',ph:'dhikr',fr:'invocation / souvenir d\'Allah',e:'🕌',note:'≠ ذَاكِرَة (mémoire) — ذَكَّرَ = rappeler'},
+  {ar:'ذَيْل',ph:'dhayl',fr:'queue (d\'animal)',e:'🦊',pl:'ذُيُول',plph:'dhoyoûl'},
+  {ar:'ذَوْق',ph:'dhawq',fr:'goût / bon goût',e:'👌',note:'ذَاقَ dhâqa = goûter (verbe)'},
+  {ar:'مَذْهَب',ph:'madhhab',fr:'école de pensée / rite',e:'📖',pl:'مَذَاهِب',plph:'madhâhib'},
+  {ar:'ذَرَّة',ph:'dharra',fr:'atome / grain',e:'⚛️',pl:'ذَرَّات',plph:'dharrât'},
+]},
+
+{id:'dha',cls:'dha',ar:'ظ',nameAr:'ظَاء',nameFr:'Dhâ emphatique',
+forms:[{l:'Isolée',a:'ظ'},{l:'Début',a:'ظـ'},{l:'Milieu',a:'ـظـ'},{l:'Fin',a:'ـظ'}],
+desc:'TH emphatique — comme ذ mais prononcé avec la gorge durcie et la bouche plus ouverte. Son grave et plein. Même forme que ط + 1 point.',
+tip:'🔊 Même geste que ذ (langue entre dents) mais bouche plus ouverte, son venant du fond. Très rare dans certains dialectes.',
+nuances:[
+  {title:'ظَاهِر / ظُهُور / أَظْهَرَ — apparaître',rows:[
+    {ar:'ظَاهِر',ph:'dhâhir',def:'apparent / évident (adj.) — fém. ظَاهِرَة'},
+    {ar:'ظَاهِرَة',ph:'dhâhira',def:'phénomène — plur. ظَوَاهِر dhawâhir'},
+    {ar:'أَظْهَرَ',ph:'\'adhhara',def:'montrer / révéler (verbe, forme IV)'},
+    {ar:'ظُهُور',ph:'dhouhoûr',def:'apparition — aussi pluriel de ظَهْر (dos)'},
+  ]},
+  {title:'ظُلْم ≠ ظَلَام — deux mots, une même idée d\'obscurité',rows:[
+    {ar:'ظُلْم',ph:'dhoulm',def:'injustice / oppression (moral)'},
+    {ar:'ظَالِم',ph:'dhâlim',def:'oppresseur / injuste — plur. ظَالِمُون'},
+    {ar:'ظَلَام',ph:'dhalâm',def:'obscurité / ténèbres (physique)'},
+    {ar:'مُظْلِم',ph:'mudhlim',def:'sombre (adj.) — endroit sans lumière'},
+  ]},
+],
+words:[
+  {ar:'ظَهْر',ph:'dhar',fr:'dos / midi',e:'🕛',pl:'ظُهُور',plph:'dhouhoûr',note:'صَلَاة الظُّهْر = prière de midi'},
+  {ar:'ظَبِي',ph:'dhabi',fr:'gazelle',e:'🦌',pl:'ظِبَاء',plph:'dhibâ\''},
+  {ar:'ظَلَام',ph:'dhalâm',fr:'obscurité / ténèbres',e:'🌑',note:'≠ ظُلْم (injustice) — voir nuances'},
+  {ar:'ظُلْم',ph:'dhoulm',fr:'injustice / oppression',e:'⚡',adj:'ظَالِم',adjph:'dhâlim — oppresseur'},
+  {ar:'ظَرْف',ph:'dharf',fr:'enveloppe / circonstance',e:'✉️',pl:'ظُرُوف',plph:'dhourou f — circonstances'},
+  {ar:'عَظِيم',ph:'3adhîm',fr:'immense / formidable',e:'🌟',fem:'عَظِيمَة',femph:'3adhîma',note:'ظ en milieu de mot'},
+  {ar:'حَظّ',ph:'Hadhdh',fr:'chance / destin',e:'🍀',note:'حَظِيظ Hadhîdh = chanceux'},
+  {ar:'لَفْظ',ph:'lafdh',fr:'prononciation / terme',e:'🗣️',pl:'أَلْفَاظ',plph:'\'alfâdh'},
+  {ar:'ظَنّ',ph:'dhann',fr:'penser / supposer',e:'🤔',note:'ظَنَنْتُ = j\'ai cru / pensé'},
+  {ar:'نَاظِر',ph:'nâdhir',fr:'surveillant / celui qui regarde',e:'👀',pl:'نُظَّار',plph:'noudhdhâr'},
+  {ar:'مَظْلُوم',ph:'madhlom',fr:'opprimé / victime d\'injustice',e:'😢',fem:'مَظْلُومَة',femph:'madhloma',pl:'مَظْلُومُون',plph:'madhlomoun'},
+]},
+
+{id:'sad',cls:'sad',ar:'ص',nameAr:'صَاد',nameFr:'Sâd emphatique',
+forms:[{l:'Isolée',a:'ص'},{l:'Début',a:'صـ'},{l:'Milieu',a:'ـصـ'},{l:'Fin',a:'ـص'}],
+desc:'S emphatique — prononcé avec la langue courbée vers le bas et la gorge durcie. Son grave et "lourd". ≠ سـ (S léger).',
+tip:'🔊 Prononce un S en ouvrant grand la bouche et en creusant la langue vers le bas. Le son résonne dans la poitrine.',
+nuances:[
+  {title:'صَوْت / صَوَّتَ / أَصْوَات',rows:[
+    {ar:'صَوْت',ph:'sawt',def:'voix / son — plur. أَصْوَات \'aswât'},
+    {ar:'صَوَّتَ',ph:'sawwata',def:'voter / émettre un son (verbe)'},
+    {ar:'مُصَوِّت',ph:'mousawwit',def:'électeur / votant'},
+  ]},
+  {title:'صَبَرَ / صَبْر / صَابِر — la patience',rows:[
+    {ar:'صَبَرَ',ph:'sabara',def:'patienter / endurer (verbe)'},
+    {ar:'صَبْر',ph:'sabr',def:'patience (nom abstrait) — grande vertu islamique'},
+    {ar:'صَابِر',ph:'sâbir',def:'patient / endurant (adj.) — fém. صَابِرَة'},
+    {ar:'اِصْطَبَرَ',ph:'istabara',def:'être très patient / s\'armer de patience'},
+  ]},
+],
+words:[
+  {ar:'صَابُون',ph:'sâboun',fr:'savon',e:'🧼',note:'pas de pluriel courant'},
+  {ar:'صَوْت',ph:'sawt',fr:'voix / son',e:'🔊',pl:'أَصْوَات',plph:'\'aswât',note:'≠ صَوَّتَ (voter)'},
+  {ar:'صَدِيق',ph:'sadîq',fr:'ami',e:'🤝',fem:'صَدِيقَة',femph:'sadîqa',pl:'أَصْدِقَاء',plph:'\'asdiqâ\''},
+  {ar:'صَغِير',ph:'saghîr',fr:'petit',e:'🐣',fem:'صَغِيرَة',femph:'saghîra',pl:'صِغَار',plph:'sighâr'},
+  {ar:'صُورَة',ph:'soûra',fr:'image / photo',e:'🖼️',pl:'صُوَر',plph:'souwar'},
+  {ar:'صَبْر',ph:'sabr',fr:'patience',e:'⏳',adj:'صَابِر',adjph:'sâbir — patient (fém. صَابِرَة)'},
+  {ar:'صَلَاة',ph:'salât',fr:'prière',e:'🕌',pl:'صَلَوَات',plph:'salawât'},
+  {ar:'صِحَّة',ph:'siHHa',fr:'santé',e:'💪',adj:'صَحِيح',adjph:'saHîH — sain / correct'},
+  {ar:'صَيْف',ph:'sayf',fr:'été',e:'☀️',adj:'صَيْفِيّ',adjph:'sayfî — estival'},
+  {ar:'صَخْرَة',ph:'sakhara',fr:'rocher',e:'🪨',pl:'صُخُور',plph:'soukhoûr'},
+  {ar:'نَصِيب',ph:'nasîb',fr:'part / destin',e:'🎲',pl:'أَنْصِبَة',plph:'\'ansiba'},
+  {ar:'صِدْق',ph:'sidq',fr:'sincérité / vérité',e:'💎',adj:'صَادِق',adjph:'sâdiq — sincère / fém. صَادِقَة'},
+  {ar:'مِصْر',ph:'misr',fr:'Égypte',e:'🇪🇬',note:'nom propre — le صـ donne sa couleur grave au mot'},
+]},
+
+{id:'dad',cls:'dad',ar:'ض',nameAr:'ضَاد',nameFr:'Dâd emphatique',
+forms:[{l:'Isolée',a:'ض'},{l:'Début',a:'ضـ'},{l:'Milieu',a:'ـضـ'},{l:'Fin',a:'ـض'}],
+desc:'L\'arabe est appelé "لُغَة الضَّاد" — la langue du dâd. D emphatique unique. Même forme que صـ + 1 point.',
+tip:'🔊 Prononce un D en ouvrant grand la bouche, langue plate vers le bas. Résonne dans la poitrine. ≠ دـ (D léger).',
+nuances:[
+  {title:'ضَوْء ≠ ضِيَاء — deux nuances de lumière',rows:[
+    {ar:'ضَوْء',ph:'daw\'',def:'lumière concrète / physique — plur. أَضْوَاء \'adwâ\''},
+    {ar:'ضِيَاء',ph:'diyâ\'',def:'éclat lumineux / lumière (plus poétique, spirituel)'},
+    {ar:'مُضِيء',ph:'moudî\'',def:'lumineux (adj.) — fém. مُضِيئَة'},
+  ]},
+  {title:'حَاضِر / حَضَرَ / حَضَارَة — présence',rows:[
+    {ar:'حَضَرَ',ph:'Hadara',def:'assister / être présent (verbe)'},
+    {ar:'حَاضِر',ph:'Hâdir',def:'présent / actuel (adj.) — fém. حَاضِرَة'},
+    {ar:'حَضَارَة',ph:'Hadâra',def:'civilisation — plur. حَضَارَات Hadârât'},
+  ]},
+],
+words:[
+  {ar:'ضَوْء',ph:'daw\'',fr:'lumière',e:'💡',pl:'أَضْوَاء',plph:'\'adwâ\'',note:'≠ ضِيَاء (lumière poétique)'},
+  {ar:'ضِفْدَع',ph:'difda3',fr:'grenouille',e:'🐸',pl:'ضَفَادِع',plph:'dafâdi3'},
+  {ar:'رَمَضَان',ph:'ramadân',fr:'Ramadan',e:'🌙',note:'ضـ en milieu — mois sacré islamique'},
+  {ar:'مَرِيض',ph:'marîd',fr:'malade',e:'🤒',fem:'مَرِيضَة',femph:'marîda',pl:'مَرْضَى',plph:'mardâ'},
+  {ar:'أَرْض',ph:'\'ard',fr:'terre / sol',e:'🌍',pl:'أَرَاضٍ',plph:'\'arâdhin'},
+  {ar:'ضَيْف',ph:'dayf',fr:'invité',e:'🤗',fem:'ضَيْفَة',femph:'dayfa',pl:'ضُيُوف',plph:'douyoûf'},
+  {ar:'حَضَارَة',ph:'Hadâra',fr:'civilisation',e:'🏛️',pl:'حَضَارَات',plph:'Hadârât'},
+  {ar:'بَعْض',ph:'ba3d',fr:'certains / une partie',e:'🔢',note:'بَعْض الوَقْت = parfois — mot très fréquent'},
+  {ar:'فَرْض',ph:'fard',fr:'obligation / devoir',e:'📋',pl:'فُرُوض',plph:'fouroûd'},
+  {ar:'رِيَاضَة',ph:'riyâda',fr:'sport',e:'⚽',pl:'رِيَاضَات',plph:'riyâdât'},
+  {ar:'مَضَى',ph:'madâ',fr:'passer / s\'écouler (temps)',e:'⏳',note:'الوَقْتُ الْمَاضِي = le temps passé'},
+  {ar:'ضَحِك',ph:'daHik',fr:'rire',e:'😄',note:'ضَحَكَ = rire (v.) — ضِحْكَة = un rire (nom)'},
+]},
+
+{id:'ta',cls:'ta',ar:'ط',nameAr:'طَاء',nameFr:'Tâ emphatique',
+forms:[{l:'Isolée',a:'ط'},{l:'Début',a:'طـ'},{l:'Milieu',a:'ـطـ'},{l:'Fin',a:'ـط'}],
+desc:'T emphatique — comme un T prononcé avec la langue courbée vers le bas. Son grave, sourd et profond. ≠ تـ (T léger).',
+tip:'🔊 Prononce un T en ouvrant grand la bouche, langue plate. Très différent de تـ : طَلَب (demande) ≠ تَلَب (sans sens).',
+nuances:[
+  {title:'طَلَبَ / طَلَب / طَالِب / طُلَّاب',rows:[
+    {ar:'طَلَبَ',ph:'talaba',def:'demander / chercher (verbe)'},
+    {ar:'طَلَب',ph:'talab',def:'demande / requête (nom) — plur. طَلَبَات talabât'},
+    {ar:'طَالِب',ph:'tâlib',def:'étudiant / chercheur — fém. طَالِبَة'},
+    {ar:'طُلَّاب',ph:'toullâb',def:'étudiants (pluriel) — aussi طَلَبَة talaba'},
+  ]},
+  {title:'طَرِيق ≠ طَرِيقَة — même plur. طُرُق !',rows:[
+    {ar:'طَرِيق',ph:'tarîq',def:'chemin / route (concret) — plur. طُرُق touruq'},
+    {ar:'طَرِيقَة',ph:'tarîqa',def:'méthode / manière (abstrait) — même plur. طُرُق touruq'},
+    {ar:'مَطْلَب',ph:'matlab',def:'objectif / exigence — plur. مَطَالِب matâlib'},
+  ]},
+],
+words:[
+  {ar:'طَاوِلَة',ph:'tâwila',fr:'table',e:'🪑',pl:'طَاوِلَات',plph:'tâwilât'},
+  {ar:'طَائِر',ph:'tâ\'ir',fr:'oiseau',e:'🐦',pl:'طُيُور',plph:'touyoûr'},
+  {ar:'طِفْل',ph:'tifl',fr:'enfant',e:'👶',fem:'طِفْلَة',femph:'tifla',pl:'أَطْفَال',plph:'\'atfâl'},
+  {ar:'طَرِيق',ph:'tarîq',fr:'chemin / route',e:'🛣️',pl:'طُرُق',plph:'touruq',note:'≠ طَرِيقَة (méthode) — même pluriel !'},
+  {ar:'بَطِّيخ',ph:'battîkh',fr:'pastèque',e:'🍉',note:'collectif — pas de pluriel courant'},
+  {ar:'طَالِب',ph:'tâlib',fr:'étudiant',e:'📚',fem:'طَالِبَة',femph:'tâliba',pl:'طُلَّاب',plph:'toullâb'},
+  {ar:'طَبِيب',ph:'tabîb',fr:'médecin',e:'👨‍⚕️',fem:'طَبِيبَة',femph:'tabîba',pl:'أَطِبَّاء',plph:'\'atibâ\''},
+  {ar:'طَبِيعَة',ph:'tabî3a',fr:'nature',e:'🌿',pl:'طَبَائِع',plph:'tabâ\'i3'},
+  {ar:'طَعَام',ph:'ta3âm',fr:'nourriture / aliment',e:'🍽️',pl:'أَطْعِمَة',plph:'\'at3ima'},
+  {ar:'مَطَر',ph:'matar',fr:'pluie',e:'🌧️',pl:'أَمْطَار',plph:'\'amtâr'},
+  {ar:'خَطّ',ph:'khatt',fr:'écriture / ligne',e:'✍️',pl:'خُطُوط',plph:'khoutout'},
+  {ar:'طَاقَة',ph:'tâqa',fr:'énergie / capacité',e:'⚡',pl:'طَاقَات',plph:'tâqât'},
+]},
+
+{id:'haw',cls:'haw',ar:'ه',nameAr:'هَاء',nameFr:'Hâ léger',
+forms:[{l:'Isolée',a:'ه'},{l:'Début',a:'هـ'},{l:'Milieu',a:'ـهـ'},{l:'Fin',a:'ـه / ـة'}],
+desc:'H léger comme dans "hello" anglais. ≠ ح (H soufflé profond). En fin de mot féminin, devient تَاء مَرْبُوطَة (ة).',
+tip:'🔊 Simple souffle léger. Différence clé : هِلَال hilâl (h léger) ≠ حَلَال Halâl (h soufflé). Le ة final se prononce -a ou -at.',
+nuances:[
+  {title:'هَوَى ≠ هَوَاء — même racine, sens différents',rows:[
+    {ar:'هَوَاء',ph:'hawâ\'',def:'air / atmosphère (physique) — hamza finale'},
+    {ar:'هَوَى',ph:'hawâ',def:'passion / désir / amour (sentimental) — yâ finale'},
+    {ar:'هَوًى',ph:'hawan',def:'caprice / désir incontrôlé — sens négatif en islam'},
+  ]},
+  {title:'هَدِيَّة / هِبَة / عَطِيَّة — trois mots pour "don"',rows:[
+    {ar:'هَدِيَّة',ph:'hadiyya',def:'cadeau offert — plur. هَدَايَا hadâyâ'},
+    {ar:'هِبَة',ph:'hiba',def:'don / donation (juridique / formel)'},
+    {ar:'عَطِيَّة',ph:'3atiyya',def:'don généreux / offrande (surtout de Dieu)'},
+  ]},
+  {title:'التَّاء الْمَرْبُوطَة ة — le ه en fin de mot féminin',rows:[
+    {ar:'مَدِينَة',ph:'madîna',def:'ville — le ة se prononce -a en pause'},
+    {ar:'طَالِبَة',ph:'tâliba',def:'étudiante — même règle'},
+    {ar:'مَدْرَسَة',ph:'madrasa',def:'école — ة = -at en liaison avec le mot suivant'},
+  ]},
+],
+words:[
+  {ar:'هِلَال',ph:'hilâl',fr:'croissant de lune',e:'🌙',pl:'أَهِلَّة',plph:'\'ahilla'},
+  {ar:'هَوَاء',ph:'hawâ\'',fr:'air / atmosphère',e:'💨',note:'≠ هَوَى (passion / désir) — voir nuances'},
+  {ar:'هَدِيَّة',ph:'hadiyya',fr:'cadeau',e:'🎁',pl:'هَدَايَا',plph:'hadâyâ'},
+  {ar:'هِرَّة',ph:'hirra',fr:'chatte',e:'🐈',masc:'هِرّ',mascph:'hirr (chat mâle)',pl:'هِرَر',plph:'hirar'},
+  {ar:'هُدْهُد',ph:'houdhoud',fr:'huppe (oiseau coranique)',e:'🐦',pl:'هَدَاهِد',plph:'hadâhid'},
+  {ar:'نَهْر',ph:'nahr',fr:'fleuve / rivière',e:'🏞️',pl:'أَنْهَار',plph:'\'anhâr'},
+  {ar:'هَوَى',ph:'hawâ',fr:'passion / désir',e:'💘',note:'≠ هَوَاء (air) — même racine, sens très différent'},
+  {ar:'نَهَار',ph:'nahâr',fr:'jour (opposé de nuit)',e:'☀️',note:'≠ يَوْم (jour en général) / ≠ لَيْل (nuit)'},
+  {ar:'هَمّ',ph:'hamm',fr:'souci / préoccupation',e:'😟',pl:'هُمُوم',plph:'houmoun'},
+  {ar:'وَجْه',ph:'wajh',fr:'visage / face',e:'😊',pl:'وُجُوه',plph:'woujoûh'},
+  {ar:'شَهْر',ph:'chahr',fr:'mois',e:'📅',pl:'شُهُور / أَشْهُر',plph:'chouhour / \'achhor'},
+  {ar:'مَهْد',ph:'mahd',fr:'berceau',e:'🛏️',note:'مَهْد عِيسَى = le berceau de Jésus — sens symbolique fort'},
+  {ar:'جَهْل',ph:'jahl',fr:'ignorance',e:'📵',note:'جَاهِل = ignorant — plur. جُهَّال jouhhal'},
+]},
+];
+
+function buildSection(l){
+  const sec=document.createElement('div');
+  sec.className=`section ${l.cls}`;
+  sec.id=`sec-${l.id}`;
+  const formsHTML=l.forms.map(f=>`<div class="fp"><span class="fp-l">${f.l}</span><span class="fp-a">${f.a}</span></div>`).join('');
+  let html=`
+    <div class="hero">
+      <div class="hero-letter">${l.ar}</div>
+      <div class="hero-info">
+        <span class="hero-name-ar">${l.nameAr}</span>
+        <span class="hero-name-fr">${l.nameFr}</span>
+        <p class="hero-desc">${l.desc}</p>
+        <div class="hero-forms">${formsHTML}</div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-icon">🔊</span><span>${l.tip}</span></div>`;
+  if(l.nuances&&l.nuances.length){
+    html+=`<div class="slabel">Nuances & distinctions</div><div class="nuance-grid">`;
+    l.nuances.forEach(n=>{
+      const rows=n.rows.map(r=>`<div class="ncard-row"><span class="ncard-ar">${r.ar}</span><div><span class="ncard-ph">${r.ph}</span><span class="ncard-def">${r.def}</span></div></div>`).join('');
+      html+=`<div class="ncard"><div class="ncard-title">${n.title}</div>${rows}</div>`;
+    });
+    html+=`</div>`;
+  }
+  html+=`<div class="slabel">Vocabulaire · ${l.nameAr}</div><div class="wgrid">`;
+  l.words.forEach(w=>{
+    let meta='';
+    if(w.fem) meta+=`<div class="meta-row"><span class="meta-tag">fém.</span><span class="meta-ar">${w.fem}</span><span class="meta-ph">${w.femph||''}</span></div>`;
+    if(w.masc) meta+=`<div class="meta-row"><span class="meta-tag">masc.</span><span class="meta-ar">${w.masc}</span><span class="meta-ph">${w.mascph||''}</span></div>`;
+    if(w.sing) meta+=`<div class="meta-row"><span class="meta-tag">sing.</span><span class="meta-ar">${w.sing}</span><span class="meta-ph">${w.singph||''}</span></div>`;
+    if(w.pl)   meta+=`<div class="meta-row"><span class="meta-tag">plur.</span><span class="meta-ar">${w.pl}</span><span class="meta-ph">${w.plph||''}</span></div>`;
+    if(w.adj)  meta+=`<div class="meta-row"><span class="meta-tag">adj.</span><span class="meta-ar">${w.adj}</span><span class="meta-ph">${w.adjph||''}</span></div>`;
+    const metaBlock=meta?`<div class="wcard-meta">${meta}</div>`:'';
+    const noteBlock=w.note?`<div class="wnote">💡 ${w.note}</div>`:'';
+    html+=`<div class="wcard">
+      <div class="wcard-top"><span class="wcard-emoji">${w.e||''}</span><span class="wcard-ar">${w.ar}</span></div>
+      <span class="wcard-ph">${w.ph}</span>
+      <span class="wcard-fr">${w.fr}</span>
+      ${metaBlock}${noteBlock}
+    </div>`;
+  });
+  html+=`</div>`;
+  sec.innerHTML=html;
+  return sec;
+}
+
+const main=document.getElementById('main');
+D.forEach(l=>main.appendChild(buildSection(l)));
+document.getElementById('sec-ghayn').classList.add('active');
+
+function show(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

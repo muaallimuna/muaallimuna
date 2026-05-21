@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Muallimuna · Les Lettres 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Naskh+Arabic:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   ROOT
+══════════════════════════════════ */
+:root {
+  --bg: #0D0B1E;
+  --card: #16142B;
+  --card2: #1E1C35;
+  --border: rgba(255,255,255,0.08);
+  --white: #FFFFFF;
+  --muted: rgba(255,255,255,0.45);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+body { font-family: 'Fredoka One', cursive; color: var(--white); user-select: none; -webkit-tap-highlight-color: transparent; }
+
+/* ══════════════════════════════════
+   ANIMATED BG
+══════════════════════════════════ */
+.bg-blob {
+  position: fixed; border-radius: 50%;
+  filter: blur(80px); opacity: 0.18;
+  pointer-events: none; z-index: 0;
+  animation: blobMove 8s ease-in-out infinite;
+}
+@keyframes blobMove {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(30px,-20px) scale(1.1); }
+}
+
+/* ══════════════════════════════════
+   SCREENS
+══════════════════════════════════ */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+.screen.hidden { display: none; }
+
+/* ══════════════════════════════════
+   SCREEN HOME
+══════════════════════════════════ */
+#s-home {
+  justify-content: flex-start;
+  padding: 24px 16px 16px;
+  gap: 16px;
+}
+.home-top { text-align: center; }
+.home-emoji { font-size: 64px; animation: bounce 1.8s ease-in-out infinite; display: block; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.home-title {
+  font-size: clamp(28px,8vw,48px);
+  background: linear-gradient(135deg,#FFD93D,#FF6B9D,#7C5CBF);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-top: 8px;
+}
+.home-sub { font-size: 15px; color: var(--muted); margin-top: 4px; }
+
+/* LETTER GRID */
+.letter-scroll {
+  width: 100%; flex: 1;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 4px 4px 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.letter-scroll::-webkit-scrollbar { display: none; }
+
+.letter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 4px;
+}
+
+.letter-tile {
+  border-radius: 18px;
+  padding: 12px 6px 10px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.2s;
+  background: var(--card);
+  overflow: hidden;
+}
+.letter-tile::before {
+  content: ''; position: absolute; inset: 0;
+  opacity: 0; transition: opacity 0.2s; border-radius: 15px;
+}
+.letter-tile:active { transform: scale(0.92); }
+.letter-tile.done::after {
+  content: '✅';
+  position: absolute; top: 4px; right: 6px;
+  font-size: 12px;
+}
+.lt-ar {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: clamp(28px, 8vw, 38px);
+  direction: rtl; line-height: 1.1;
+}
+.lt-ph { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+.lt-emoji { font-size: 20px; }
+
+/* ══════════════════════════════════
+   SCREEN LEARN
+══════════════════════════════════ */
+#s-learn {
+  justify-content: flex-start;
+  padding: 12px 14px 10px;
+  gap: 8px;
+}
+
+/* TOP BAR */
+.topbar {
+  width: 100%; display: flex;
+  align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.back-btn {
+  background: var(--card2); border: none; border-radius: 50%;
+  width: 44px; height: 44px; font-size: 20px;
+  cursor: pointer; color: white; display: flex;
+  align-items: center; justify-content: center;
+}
+.back-btn:active { opacity: 0.7; }
+.progress-dots { display: flex; gap: 5px; align-items: center; }
+.pdot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.3s;
+}
+.pdot.active { background: white; transform: scale(1.3); }
+.pdot.done { background: #6BCB77; }
+
+/* LETTER HERO */
+.letter-hero {
+  width: 100%; max-width: 480px; margin: 0 auto;
+  background: var(--card);
+  border-radius: 24px;
+  border: 3px solid transparent;
+  padding: 18px 16px 14px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  flex-shrink: 0;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.letter-hero-ar {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: clamp(80px,22vw,110px);
+  direction: rtl; line-height: 1;
+  text-shadow: 0 0 40px currentColor;
+  animation: heroFloat 3s ease-in-out infinite;
+}
+@keyframes heroFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.03); }
+}
+.letter-hero-name {
+  font-size: clamp(18px,5vw,24px);
+  opacity: 0.8;
+}
+.tap-to-hear {
+  font-size: 12px; color: var(--muted);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* TRACE AREA */
+.trace-wrap {
+  width: 100%; max-width: 480px; margin: 0 auto;
+  flex-shrink: 0;
+  background: var(--card2);
+  border-radius: 20px;
+  border: 2px dashed rgba(255,255,255,0.12);
+  overflow: hidden;
+  position: relative;
+}
+.trace-label {
+  position: absolute; top: 10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; color: var(--muted);
+  white-space: nowrap; z-index: 2;
+  pointer-events: none;
+}
+#trace-canvas {
+  display: block; width: 100%;
+  touch-action: none;
+}
+.trace-ghost {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.trace-ghost-ar {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 100px; direction: rtl;
+  opacity: 0.08; color: white;
+  user-select: none;
+}
+.trace-clear {
+  position: absolute; bottom: 8px; right: 10px;
+  background: rgba(255,255,255,0.1);
+  border: none; border-radius: 12px;
+  padding: 5px 12px; font-family: 'Fredoka One', cursive;
+  font-size: 12px; color: white; cursor: pointer; z-index: 3;
+}
+.trace-clear:active { opacity: 0.7; }
+
+/* WORD SHOWCASE */
+.word-showcase {
+  width: 100%; max-width: 480px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; flex-shrink: 0;
+}
+.ws-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 12px 8px 10px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.ws-card:active { transform: scale(0.95); }
+.ws-emoji { font-size: 28px; }
+.ws-ar {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 20px; direction: rtl;
+}
+.ws-ph { font-size: 10px; color: var(--muted); }
+.ws-fr { font-size: 11px; opacity: 0.75; }
+
+/* ACTION BTNS */
+.action-row {
+  display: flex; gap: 10px;
+  width: 100%; max-width: 480px; margin: 0 auto;
+  flex-shrink: 0;
+}
+.action-btn {
+  flex: 1; padding: 15px; border: none;
+  border-radius: 18px; font-family: 'Fredoka One', cursive;
+  font-size: 17px; cursor: pointer; color: white;
+  transition: transform 0.15s;
+}
+.action-btn:active { transform: scale(0.95); }
+.btn-bravo { background: linear-gradient(135deg,#6BCB77,#4D96FF); }
+.btn-repeat { background: var(--card2); }
+
+/* ══════════════════════════════════
+   SCREEN REWARD
+══════════════════════════════════ */
+#s-reward {
+  justify-content: center; gap: 20px;
+  background: radial-gradient(ellipse at 50% 30%,#1a0a00,var(--bg));
+}
+.rw-trophy { font-size: 100px; animation: trophyPop 1s ease-in-out infinite; }
+@keyframes trophyPop {
+  0%,100%{transform:scale(1) rotate(-5deg);filter:drop-shadow(0 0 20px gold)}
+  50%{transform:scale(1.15) rotate(5deg);filter:drop-shadow(0 0 40px gold)}
+}
+.rw-title {
+  font-size: clamp(32px,9vw,52px); text-align: center;
+  background: linear-gradient(90deg,#FFD93D,#FF922B,#FFD93D);
+  background-size: 200%; -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: shimmer 2s linear infinite;
+}
+@keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+.rw-arabic {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 32px; direction: rtl; color: #FFD93D;
+  text-shadow: 0 0 20px rgba(255,217,61,0.5);
+}
+.rw-stars { font-size: 44px; }
+.rw-btn {
+  padding: 16px 40px; border: none;
+  border-radius: 22px; font-family: 'Fredoka One', cursive;
+  font-size: 20px; cursor: pointer; color: white;
+  background: linear-gradient(135deg,#FF6B9D,#7C5CBF);
+  box-shadow: 0 8px 30px rgba(124,92,191,0.4);
+}
+.rw-btn:active { transform: scale(0.95); }
+
+/* ══════════════════════════════════
+   CONFETTI
+══════════════════════════════════ */
+#confetti-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 999;
+}
+
+/* ══════════════════════════════════
+   FEEDBACK FLASH
+══════════════════════════════════ */
+#fb-flash {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+#fb-flash.show { opacity: 1; }
+.fb-emoji { font-size: 110px; animation: fbPop .5s ease; }
+@keyframes fbPop { 0%{transform:scale(0)} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
+
+/* ══════════════════════════════════
+   SONG OVERLAY
+══════════════════════════════════ */
+#song-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(13,11,30,0.95);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 30px;
+}
+#song-overlay.hidden { display: none; }
+.song-letter-big {
+  font-family: 'Noto Naskh Arabic', serif;
+  direction: rtl;
+  animation: singBounce .5s ease-in-out infinite alternate;
+}
+@keyframes singBounce { 0%{transform:scale(1)} 100%{transform:scale(1.15)} }
+.song-lyrics {
+  font-size: 22px; text-align: center;
+  line-height: 1.7; color: white;
+}
+.song-lyrics .hl { font-size: 26px; }
+.song-close {
+  padding: 14px 36px; border: none;
+  border-radius: 20px; background: linear-gradient(135deg,#FFD93D,#FF922B);
+  color: #0D0B1E; font-family: 'Fredoka One', cursive;
+  font-size: 18px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<!-- BG BLOBS -->
+<div class="bg-blob" style="width:300px;height:300px;background:#7C5CBF;top:-50px;left:-80px;animation-delay:0s"></div>
+<div class="bg-blob" style="width:250px;height:250px;background:#FF6B9D;bottom:-40px;right:-60px;animation-delay:3s"></div>
+<div class="bg-blob" style="width:200px;height:200px;background:#FFD93D;top:40%;left:60%;animation-delay:1.5s"></div>
+
+<!-- FEEDBACK -->
+<div id="fb-flash"><span class="fb-emoji" id="fb-emoji">⭐</span></div>
+
+<!-- SONG OVERLAY -->
+<div id="song-overlay" class="hidden">
+  <div class="song-letter-big" id="song-letter-big" style="font-size:90px;color:#FFD93D">أ</div>
+  <div id="song-lyrics" class="song-lyrics"></div>
+  <button class="song-close" onclick="closeSong()">Super ! ✅</button>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN HOME
+══════════════════════════════════ -->
+<div class="screen" id="s-home">
+  <div class="home-top">
+    <span class="home-emoji">🌟</span>
+    <div class="home-title">Les Lettres !</div>
+    <div class="home-sub">Tape une lettre pour l'apprendre ✨</div>
+  </div>
+  <div class="letter-scroll">
+    <div class="letter-grid" id="letter-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN LEARN
+══════════════════════════════════ -->
+<div class="screen hidden" id="s-learn">
+  <div class="topbar">
+    <button class="back-btn" onclick="goHome()">⬅️</button>
+    <div class="progress-dots" id="prog-dots"></div>
+    <button class="back-btn" onclick="openSong()" style="font-size:18px">🎵</button>
+  </div>
+
+  <div class="letter-hero" id="letter-hero" onclick="speakLetter()">
+    <div class="letter-hero-ar" id="hero-ar">أ</div>
+    <div class="letter-hero-name" id="hero-name">Alif</div>
+    <div class="tap-hint">👆 tape pour entendre !</div>
+  </div>
+
+  <div class="trace-wrap" id="trace-wrap">
+    <span class="trace-label">✏️ Trace la lettre avec ton doigt !</span>
+    <div class="trace-ghost"><span class="trace-ghost-ar" id="trace-ghost">أ</span></div>
+    <canvas id="trace-canvas"></canvas>
+    <button class="trace-clear" onclick="clearTrace()">🗑️ Effacer</button>
+  </div>
+
+  <div class="word-showcase" id="word-showcase"></div>
+
+  <div class="action-row">
+    <button class="action-btn btn-repeat" onclick="speakLetter()">🔊 Écouter</button>
+    <button class="action-btn btn-bravo" onclick="markDone()">⭐ J'ai compris !</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN REWARD
+══════════════════════════════════ -->
+<div class="screen hidden" id="s-reward">
+  <div class="rw-trophy">🏆</div>
+  <div class="rw-title" id="rw-title">SUPER CHAMPION !</div>
+  <div class="rw-arabic" id="rw-arabic">أَحْسَنْتَ !</div>
+  <div class="rw-stars" id="rw-stars">⭐⭐⭐</div>
+  <button class="rw-btn" onclick="goHome()">🚀 Continuer !</button>
+</div>
+
+<script>
+// ══════════════════════════════════
+// DATA — 28 lettres, chacune avec :
+//   son principal, un emoji mémo-trigger,
+//   et 3 mots avec ce son
+// ══════════════════════════════════
+const LETTERS = [
+  { ar:'أ', name:'Alif', ph:'a', color:'#FF6B6B', emoji:'🐇',
+    sound:'أ... comme ARNAB !',
+    words:[{ar:'أَرْنَب',ph:'arnab',fr:'lapin',e:'🐇'},{ar:'أَسَد',ph:'asad',fr:'lion',e:'🦁'},{ar:'أُمّ',ph:'oumm',fr:'maman',e:'👩'}]
+  },
+  { ar:'ب', name:'Bâ', ph:'b', color:'#FF922B', emoji:'🏠',
+    sound:'Bbb... comme BAYT !',
+    words:[{ar:'بَيْت',ph:'bayt',fr:'maison',e:'🏠'},{ar:'بَحْر',ph:'bahr',fr:'mer',e:'🌊'},{ar:'بَقَرَة',ph:'baqara',fr:'vache',e:'🐄'}]
+  },
+  { ar:'ت', name:'Tâ', ph:'t', color:'#FFD93D', emoji:'🍎',
+    sound:'Ttt... comme TOUFFAHA !',
+    words:[{ar:'تُفَّاحَة',ph:'touffâha',fr:'pomme',e:'🍎'},{ar:'تَمْر',ph:'tamr',fr:'dattes',e:'🌴'},{ar:'تِلْمِيذ',ph:'tilmîdh',fr:'élève',e:'📚'}]
+  },
+  { ar:'ث', name:'Thâ', ph:'th', color:'#6BCB77', emoji:'🦊',
+    sound:'Thhh... comme THA\'LAB !',
+    words:[{ar:'ثَعْلَب',ph:"tha'lab",fr:'renard',e:'🦊'},{ar:'ثَلْج',ph:'thalj',fr:'neige',e:'❄️'},{ar:'ثُوم',ph:'thoum',fr:'ail',e:'🧄'}]
+  },
+  { ar:'ج', name:'Jîm', ph:'j', color:'#4D96FF', emoji:'🐪',
+    sound:'Jjj... comme JAMAL !',
+    words:[{ar:'جَمَل',ph:'jamal',fr:'chameau',e:'🐪'},{ar:'جَبَل',ph:'jabal',fr:'montagne',e:'⛰️'},{ar:'جَنَّة',ph:'janna',fr:'paradis',e:'🌺'}]
+  },
+  { ar:'ح', name:'Hâ', ph:'H', color:'#CC5DE8', emoji:'🐴',
+    sound:'Hhh soufflé... comme HISÂN !',
+    words:[{ar:'حِصَان',ph:'Hisân',fr:'cheval',e:'🐴'},{ar:'حَلِيب',ph:'Halîb',fr:'lait',e:'🥛'},{ar:'حُبّ',ph:'Houbb',fr:'amour',e:'❤️'}]
+  },
+  { ar:'خ', name:'Kha', ph:'kh', color:'#7DD3FC', emoji:'🍞',
+    sound:'Khhh... comme KHOBZ !',
+    words:[{ar:'خُبْز',ph:'khobz',fr:'pain',e:'🍞'},{ar:'خَرُوف',ph:'kharûf',fr:'mouton',e:'🐑'},{ar:'خَاتَم',ph:'khâtam',fr:'bague',e:'💍'}]
+  },
+  { ar:'د', name:'Dâl', ph:'d', color:'#FF6B6B', emoji:'🐻',
+    sound:'Ddd... comme DOUBB !',
+    words:[{ar:'دُبّ',ph:'doubb',fr:'ours',e:'🐻'},{ar:'دَجَاجَة',ph:"dajâja",fr:'poulet',e:'🐔'},{ar:'دَفْتَر',ph:'daftar',fr:'cahier',e:'📓'}]
+  },
+  { ar:'ذ', name:'Dhâl', ph:'dh', color:'#FF922B', emoji:'🐺',
+    sound:'Dhhh (langue entre les dents)... comme DHI\'B !',
+    words:[{ar:'ذِئْب',ph:"dhi'b",fr:'loup',e:'🐺'},{ar:'ذَهَب',ph:'dhahab',fr:'or',e:'🥇'},{ar:'ذُرَة',ph:'dhoura',fr:'maïs',e:'🌽'}]
+  },
+  { ar:'ر', name:'Râ', ph:'r', color:'#FFD93D', emoji:'🌹',
+    sound:'Rrr roulé... comme WARD !',
+    words:[{ar:'وَرْد',ph:'ward',fr:'rose',e:'🌹'},{ar:'رَأْس',ph:"ra's",fr:'tête',e:'🧑'},{ar:'رِيح',ph:'rîh',fr:'vent',e:'💨'}]
+  },
+  { ar:'ز', name:'Zây', ph:'z', color:'#6BCB77', emoji:'🌸',
+    sound:'Zzz... comme ZAHRA !',
+    words:[{ar:'زَهْرَة',ph:'zahra',fr:'fleur',e:'🌸'},{ar:'زَيْتُون',ph:'zaytoun',fr:'olive',e:'🫒'},{ar:'زَرَافَة',ph:'zarâfa',fr:'girafe',e:'🦒'}]
+  },
+  { ar:'س', name:'Sîn', ph:'s', color:'#4D96FF', emoji:'🐟',
+    sound:'Sss... comme SAMAKA !',
+    words:[{ar:'سَمَكَة',ph:'samaka',fr:'poisson',e:'🐟'},{ar:'سَمَاء',ph:"samâ'",fr:'ciel',e:'🌤️'},{ar:'سَيَّارَة',ph:'sayyâra',fr:'voiture',e:'🚗'}]
+  },
+  { ar:'ش', name:'Chîn', ph:'ch', color:'#CC5DE8', emoji:'☀️',
+    sound:'Chhh... comme CHAMS !',
+    words:[{ar:'شَمْس',ph:'chams',fr:'soleil',e:'☀️'},{ar:'شَجَرَة',ph:'chajara',fr:'arbre',e:'🌳'},{ar:'شَاي',ph:'châï',fr:'thé',e:'🍵'}]
+  },
+  { ar:'ص', name:'Sâd', ph:'S', color:'#7DD3FC', emoji:'🧼',
+    sound:'SSS grave... comme SÂBOUN !',
+    words:[{ar:'صَابُون',ph:'sâboun',fr:'savon',e:'🧼'},{ar:'صَدِيق',ph:'sadîq',fr:'ami',e:'🤝'},{ar:'صُورَة',ph:'soûra',fr:'photo',e:'🖼️'}]
+  },
+  { ar:'ض', name:'Dâd', ph:'D', color:'#FF6B6B', emoji:'🐸',
+    sound:'DDD grave... comme DIFDA\'A !',
+    words:[{ar:'ضِفْدَع',ph:"difda'",fr:'grenouille',e:'🐸'},{ar:'ضَوْء',ph:"daw'",fr:'lumière',e:'💡'},{ar:'ضَيْف',ph:'dayf',fr:'invité',e:'🤗'}]
+  },
+  { ar:'ط', name:'Tâ', ph:'T', color:'#FF922B', emoji:'🪑',
+    sound:'TTT grave... comme TÂWILA !',
+    words:[{ar:'طَاوِلَة',ph:'tâwila',fr:'table',e:'🪑'},{ar:'طِفْل',ph:'tifl',fr:'enfant',e:'👶'},{ar:'طَائِر',ph:"tâ'ir",fr:'oiseau',e:'🐦'}]
+  },
+  { ar:'ظ', name:'Dhâ', ph:'DH', color:'#FFD93D', emoji:'🕛',
+    sound:'DHH grave... comme DHAR !',
+    words:[{ar:'ظَهْر',ph:'dhar',fr:'dos/midi',e:'🕛'},{ar:'ظَلَام',ph:'dhalâm',fr:'obscurité',e:'🌑'},{ar:'ظَبِي',ph:'dhabi',fr:'gazelle',e:'🦌'}]
+  },
+  { ar:'ع', name:'3ayn', ph:'3', color:'#6BCB77', emoji:'👁️',
+    sound:'3aaa gorge serrée... comme 3AYN !',
+    words:[{ar:'عَيْن',ph:'3ayn',fr:'œil',e:'👁️'},{ar:'عَسَل',ph:'3asal',fr:'miel',e:'🍯'},{ar:'عِنَب',ph:'3inab',fr:'raisin',e:'🍇'}]
+  },
+  { ar:'غ', name:'Ghayn', ph:'gh', color:'#4D96FF', emoji:'☁️',
+    sound:'Ghrrr... comme GHAYMA !',
+    words:[{ar:'غَيْمَة',ph:'ghayma',fr:'nuage',e:'☁️'},{ar:'غَابَة',ph:'ghâba',fr:'forêt',e:'🌲'},{ar:'غُرْفَة',ph:'ghourfa',fr:'chambre',e:'🛏️'}]
+  },
+  { ar:'ف', name:'Fâ', ph:'f', color:'#CC5DE8', emoji:'🐘',
+    sound:'Fff... comme FÎL !',
+    words:[{ar:'فِيل',ph:'fîl',fr:'éléphant',e:'🐘'},{ar:'فَرَاشَة',ph:'farâcha',fr:'papillon',e:'🦋'},{ar:'فَاكِهَة',ph:'fâkiha',fr:'fruit',e:'🍓'}]
+  },
+  { ar:'ق', name:'Qâf', ph:'q', color:'#7DD3FC', emoji:'🌙',
+    sound:'Qqq du fond de gorge... comme QAMAR !',
+    words:[{ar:'قَمَر',ph:'qamar',fr:'lune',e:'🌙'},{ar:'قَلَم',ph:'qalam',fr:'crayon',e:'✏️'},{ar:'قِطَّة',ph:'qitta',fr:'chat',e:'🐱'}]
+  },
+  { ar:'ك', name:'Kâf', ph:'k', color:'#FF6B6B', emoji:'📕',
+    sound:'Kkk... comme KITÂB !',
+    words:[{ar:'كِتَاب',ph:'kitâb',fr:'livre',e:'📕'},{ar:'كَلْب',ph:'kalb',fr:'chien',e:'🐶'},{ar:'كُرَة',ph:'koura',fr:'ballon',e:'⚽'}]
+  },
+  { ar:'ل', name:'Lâm', ph:'l', color:'#FF922B', emoji:'🍋',
+    sound:'Lll... comme LAYMOUN !',
+    words:[{ar:'لَيْمُون',ph:'laymoun',fr:'citron',e:'🍋'},{ar:'لَيْل',ph:'layl',fr:'nuit',e:'🌃'},{ar:'لَبَن',ph:'laban',fr:'lait',e:'🥛'}]
+  },
+  { ar:'م', name:'Mîm', ph:'m', color:'#FFD93D', emoji:'💧',
+    sound:'Mmm... comme MÂ\' !',
+    words:[{ar:'مَاء',ph:"mâ'",fr:'eau',e:'💧'},{ar:'مَسْجِد',ph:'masjid',fr:'mosquée',e:'🕌'},{ar:'مَلَك',ph:'malak',fr:'ange',e:'👼'}]
+  },
+  { ar:'ن', name:'Nûn', ph:'n', color:'#6BCB77', emoji:'⭐',
+    sound:'Nnn... comme NAJMA !',
+    words:[{ar:'نَجْمَة',ph:'najma',fr:'étoile',e:'⭐'},{ar:'نَهْر',ph:'nahr',fr:'fleuve',e:'🏞️'},{ar:'نُور',ph:'nour',fr:'lumière',e:'✨'}]
+  },
+  { ar:'ه', name:'Hâ léger', ph:'h', color:'#4D96FF', emoji:'🌙',
+    sound:'Hhh doux... comme HILÂL !',
+    words:[{ar:'هِلَال',ph:'hilâl',fr:'croissant',e:'🌙'},{ar:'هَدِيَّة',ph:'hadiyya',fr:'cadeau',e:'🎁'},{ar:'هَوَاء',ph:"hawâ'",fr:'air',e:'💨'}]
+  },
+  { ar:'و', name:'Wâw', ph:'w', color:'#CC5DE8', emoji:'🌹',
+    sound:'Www... comme WARD !',
+    words:[{ar:'وَرْد',ph:'ward',fr:'rose',e:'🌹'},{ar:'وَلَد',ph:'walad',fr:'garçon',e:'👦'},{ar:'وَقْت',ph:'waqt',fr:'temps',e:'⏰'}]
+  },
+  { ar:'ي', name:'Yâ', ph:'y', color:'#7DD3FC', emoji:'✋',
+    sound:'Yyy... comme YAD !',
+    words:[{ar:'يَد',ph:'yad',fr:'main',e:'✋'},{ar:'يَوْم',ph:'yawm',fr:'jour',e:'📅'},{ar:'يَاسَمِين',ph:'yâsamîn',fr:'jasmin',e:'🌼'}]
+  },
+];
+
+// Progress tracking
+const done = new Set(JSON.parse(localStorage.getItem('mu-done') || '[]'));
+let currentLetter = null;
+let traceCtx = null;
+let tracing = false;
+let lastX = 0, lastY = 0;
+let traceStrokes = 0;
+
+// ══════════════════════════════════
+// BUILD HOME GRID
+// ══════════════════════════════════
+function buildGrid() {
+  const grid = document.getElementById('letter-grid');
+  grid.innerHTML = '';
+  LETTERS.forEach((l, i) => {
+    const tile = document.createElement('div');
+    tile.className = 'letter-tile' + (done.has(i) ? ' done' : '');
+    tile.style.borderColor = l.color;
+    tile.style.background = done.has(i)
+      ? `linear-gradient(135deg, ${l.color}33, ${l.color}11)`
+      : 'var(--card)';
+    tile.innerHTML = `
+      <div class="lt-ar" style="color:${l.color}">${l.ar}</div>
+      <div class="lt-ph">${l.name}</div>
+      <div class="lt-emoji">${l.emoji}</div>`;
+    tile.onclick = () => openLetter(i);
+    grid.appendChild(tile);
+  });
+}
+
+// ══════════════════════════════════
+// OPEN LETTER
+// ══════════════════════════════════
+function openLetter(idx) {
+  currentLetter = idx;
+  const l = LETTERS[idx];
+
+  // Style hero
+  document.getElementById('hero-ar').textContent = l.ar;
+  document.getElementById('hero-ar').style.color = l.color;
+  document.getElementById('hero-name').textContent = `${l.name}  ·  ${l.ph}`;
+  document.getElementById('trace-ghost').textContent = l.ar;
+  document.getElementById('letter-hero').style.borderColor = l.color;
+
+  // Progress dots
+  const dots = document.getElementById('prog-dots');
+  dots.innerHTML = '';
+  LETTERS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'pdot' + (i === idx ? ' active' : done.has(i) ? ' done' : '');
+    d.style.cursor = 'pointer';
+    d.onclick = (e) => { e.stopPropagation(); openLetter(i); };
+    dots.appendChild(d);
+  });
+
+  // Words showcase
+  const ws = document.getElementById('word-showcase');
+  ws.innerHTML = '';
+  l.words.forEach(w => {
+    const c = document.createElement('div');
+    c.className = 'ws-card';
+    c.style.borderColor = l.color + '55';
+    c.innerHTML = `<span class="ws-emoji">${w.e}</span><span class="ws-ar" style="color:${l.color}">${w.ar}</span><span class="ws-ph">${w.ph}</span><span class="ws-fr">${w.fr}</span>`;
+    c.onclick = () => { speak(w.ar); flashCard(c, l.color); };
+    ws.appendChild(c);
+  });
+
+  showScreen('s-learn');
+  initTrace(l);
+  setTimeout(() => speak(l.ar), 500);
+  setTimeout(() => speakWithWords(l), 1200);
+}
+
+function flashCard(el, color) {
+  el.style.borderColor = color;
+  el.style.background = color + '22';
+  setTimeout(() => { el.style.borderColor = color + '55'; el.style.background = ''; }, 600);
+}
+
+// ══════════════════════════════════
+// SPEAK
+// ══════════════════════════════════
+// ── TTS helper ──────────────────────────────
+// Picks the best available Arabic voice on the device.
+// اللَّه is spoken via SSML phoneme trick where supported,
+// otherwise falls back to the spelled-out form.
+
+let _bestArabicVoice = null;
+
+function getBestArabicVoice() {
+  if (_bestArabicVoice) return _bestArabicVoice;
+  const voices = window.speechSynthesis.getVoices();
+  // Priority order: Egyptian > Jordanian > Lebanese > generic Arabic
+  const priority = ['ar-EG','ar-JO','ar-LB','ar-MA','ar-DZ','ar-SA','ar'];
+  for (const p of priority) {
+    const v = voices.find(v => v.lang.startsWith(p));
+    if (v) { _bestArabicVoice = v; return v; }
+  }
+  // fallback: any Arabic voice
+  const any = voices.find(v => v.lang.startsWith('ar'));
+  if (any) { _bestArabicVoice = any; return any; }
+  return null;
+}
+
+// Pre-load voices
+window.speechSynthesis.onvoiceschanged = () => { _bestArabicVoice = null; getBestArabicVoice(); };
+
+function speakArabic(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const voice = getBestArabicVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  if (voice) u.voice = voice;
+  u.lang = voice ? voice.lang : 'ar-SA';
+  u.rate = 0.65;
+  u.pitch = 1.0;
+  u.volume = 1.0;
+  window.speechSynthesis.speak(u);
+}
+
+// اللَّه replacement map — spelled out phonetically so any engine says it right
+const WORD_FIXES = {
+  'الله':            ['الله'],
+  'بِسْمِ اللهِ':    ['بسم', 'الله'],
+  'الحَمْدُ لِلَّهِ': ['الحمد', 'لله'],
+  'إِنْ شَاءَ اللهُ':['إن شاء', 'الله'],
+};
+
+function speak(text, lang='ar-SA') {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const clean = text.replace(/[🌟!✨🙏💫🌙⭐]/g,'').trim();
+
+  // Check if it needs splitting
+  for (const [key, parts] of Object.entries(WORD_FIXES)) {
+    if (clean.includes(key) || text.includes(key)) {
+      parts.forEach((part, i) => {
+        const u = new SpeechSynthesisUtterance(part);
+        const voice = getBestArabicVoice();
+        if (voice) u.voice = voice;
+        u.lang = voice ? voice.lang : 'ar-SA';
+        u.rate = 0.6;
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+      });
+      return;
+    }
+  }
+
+  // Normal word
+  speakArabic(clean || text);
+}
+
+function speakLetter() {
+  if (currentLetter === null) return;
+  const l = LETTERS[currentLetter];
+  speak(l.ar);
+  pulseHero();
+}
+
+function speakWithWords(l) {
+  // Say letter then first word
+  const chain = [l.ar, l.words[0].ar];
+  let i = 0;
+  function next() {
+    if (i >= chain.length) return;
+    const u = new SpeechSynthesisUtterance(chain[i]);
+    u.lang = 'ar-SA'; u.rate = 0.7;
+    u.onend = () => { i++; setTimeout(next, 400); };
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+
+function pulseHero() {
+  const h = document.getElementById('letter-hero');
+  h.style.transform = 'scale(1.05)';
+  setTimeout(() => h.style.transform = '', 200);
+}
+
+// ══════════════════════════════════
+// TRACE CANVAS
+// ══════════════════════════════════
+function initTrace(l) {
+  const wrap = document.getElementById('trace-wrap');
+  const canvas = document.getElementById('trace-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = wrap.clientWidth;
+  const H = Math.round(W * 0.48);
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+
+  traceCtx = canvas.getContext('2d');
+  traceCtx.scale(dpr, dpr);
+  traceCtx.clearRect(0, 0, W, H);
+  traceStrokes = 0;
+
+  // Touch
+  canvas.ontouchstart = (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect();
+    tracing = true;
+    lastX = t.clientX - r.left;
+    lastY = t.clientY - r.top;
+    traceCtx.beginPath();
+    traceCtx.arc(lastX, lastY, 6, 0, Math.PI * 2);
+    traceCtx.fillStyle = l.color;
+    traceCtx.fill();
+  };
+  canvas.ontouchmove = (e) => {
+    e.preventDefault();
+    if (!tracing) return;
+    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect();
+    const x = t.clientX - r.left;
+    const y = t.clientY - r.top;
+    traceCtx.beginPath();
+    traceCtx.moveTo(lastX, lastY);
+    traceCtx.lineTo(x, y);
+    traceCtx.strokeStyle = l.color;
+    traceCtx.lineWidth = 12;
+    traceCtx.lineCap = 'round';
+    traceCtx.lineJoin = 'round';
+    traceCtx.globalAlpha = 0.9;
+    traceCtx.stroke();
+    lastX = x; lastY = y;
+    traceStrokes++;
+    if (traceStrokes === 30) {
+      showFeedback('✏️✨');
+    }
+  };
+  canvas.ontouchend = () => { tracing = false; };
+
+  // Mouse fallback
+  canvas.onmousedown = (e) => {
+    tracing = true;
+    const r = canvas.getBoundingClientRect();
+    lastX = e.clientX - r.left; lastY = e.clientY - r.top;
+  };
+  canvas.onmousemove = (e) => {
+    if (!tracing) return;
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    traceCtx.beginPath();
+    traceCtx.moveTo(lastX, lastY);
+    traceCtx.lineTo(x, y);
+    traceCtx.strokeStyle = l.color;
+    traceCtx.lineWidth = 12;
+    traceCtx.lineCap = 'round';
+    traceCtx.stroke();
+    lastX = x; lastY = y;
+    traceStrokes++;
+    if (traceStrokes === 30) showFeedback('✏️✨');
+  };
+  canvas.onmouseup = () => { tracing = false; };
+}
+
+function clearTrace() {
+  const canvas = document.getElementById('trace-canvas');
+  if (traceCtx) traceCtx.clearRect(0, 0, canvas.width, canvas.height);
+  traceStrokes = 0;
+}
+
+// ══════════════════════════════════
+// MARK DONE
+// ══════════════════════════════════
+function markDone() {
+  if (currentLetter === null) return;
+  done.add(currentLetter);
+  localStorage.setItem('mu-done', JSON.stringify([...done]));
+  launchConfetti();
+  showFeedback('⭐');
+  speak('أَحْسَنْتَ');
+
+  const total = LETTERS.length;
+  if (done.size === total) {
+    setTimeout(showReward, 1200);
+  } else {
+    // Auto-advance to next after 1.5s
+    setTimeout(() => {
+      const next = (currentLetter + 1) % total;
+      openLetter(next);
+    }, 1500);
+  }
+}
+
+// ══════════════════════════════════
+// SONG OVERLAY
+// ══════════════════════════════════
+function openSong() {
+  if (currentLetter === null) return;
+  const l = LETTERS[currentLetter];
+  document.getElementById('song-letter-big').textContent = l.ar;
+  document.getElementById('song-letter-big').style.color = l.color;
+  const ex = l.words[0];
+  document.getElementById('song-lyrics').innerHTML = `
+    <span class="hl" style="color:${l.color}">${l.ar}</span>... ${l.name} !<br>
+    <span style="font-size:32px">${ex.e}</span><br>
+    <span class="hl">${ex.ar}</span><br>
+    <span style="opacity:0.6;font-size:16px">${ex.fr}</span><br><br>
+    <span style="opacity:0.5;font-size:15px">Répète 3 fois !</span>`;
+
+  document.getElementById('song-overlay').classList.remove('hidden');
+
+  // Sing it
+  setTimeout(() => {
+    speak(l.ar);
+    setTimeout(() => speak(ex.ar), 1200);
+  }, 400);
+}
+function closeSong() {
+  document.getElementById('song-overlay').classList.add('hidden');
+}
+
+// ══════════════════════════════════
+// REWARD
+// ══════════════════════════════════
+function showReward() {
+  document.getElementById('rw-title').textContent = 'TU AS TOUT APPRIS !';
+  document.getElementById('rw-arabic').textContent = 'أَحْسَنْتَ';
+  document.getElementById('rw-stars').textContent = '⭐⭐⭐';
+  showScreen('s-reward');
+  launchConfetti();
+  setTimeout(() => speak('أَحْسَنْتَ'), 500);
+}
+
+// ══════════════════════════════════
+// NAV
+// ══════════════════════════════════
+function goHome() {
+  buildGrid();
+  showScreen('s-home');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// ══════════════════════════════════
+// FEEDBACK FLASH
+// ══════════════════════════════════
+function showFeedback(emoji) {
+  const ov = document.getElementById('fb-flash');
+  const em = document.getElementById('fb-emoji');
+  em.textContent = emoji;
+  ov.classList.add('show');
+  setTimeout(() => ov.classList.remove('show'), 700);
+}
+
+// ══════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = [];
+  const colors = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#FF922B','#CC5DE8','#7DD3FC'];
+  for (let i = 0; i < 70; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width, y: -20,
+      vx: (Math.random() - 0.5) * 5,
+      vy: Math.random() * 3 + 2,
+      size: Math.random() * 9 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotV: (Math.random() - 0.5) * 8,
+      life: 1
+    });
+  }
+  let frame;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.08;
+      p.rot += p.rotV; p.life -= 0.013;
+      if (p.life > 0 && p.y < canvas.height) {
+        alive = true;
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+        ctx.restore();
+      }
+    });
+    if (alive) frame = requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  cancelAnimationFrame(frame);
+  draw();
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+buildGrid();
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+</script>
+</body>
+</html>
